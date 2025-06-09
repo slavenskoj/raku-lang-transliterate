@@ -34,6 +34,7 @@ my %base-mappings = (
     'ф' => 'f',
     'х' => 'kh',
     'ц' => 't͡s',    # with tie
+    'ꙡ' => 't͡s',    # Reversed tse (Old Novgorodian, same as ц)
     'ч' => 'ch',
     'ш' => 'sh',
     'щ' => 'sht',
@@ -46,10 +47,24 @@ my %base-mappings = (
     
     # Special Church Slavonic letters
     'ѡ' => 'ō',      # Omega (with macron)
+    'ꙍ' => 'ō',      # Broad omega (with macron)
     'ѿ' => 'ō͡t',    # Ot ligature (with tie)
-    'оу' => 'u',     # Uk digraph
-    'ѹ' => 'u',      # Uk ligature (early form)
+    'ᲂ' => 'o',      # Narrow o (U+1C82)
+    'ᲂу' => 'u',     # Narrow o + u digraph
+    'ᲈ' => 'ū',      # Unblended uk (U+1C88) - with macron like monograph
+    'ѻ' => 'o',      # Broad o (word initial)
+    'ꚛ' => 'o',      # Crossed o (for окрестъ, округъ)
+    'ꙩ' => 'o',      # Monocular o / eyed o (for око)
+    'ꙫ' => 'o',      # Binocular o variant 1
+    'ꙭ' => 'o',      # Binocular o variant 2
+    'ꙮ' => 'o',      # Multiocular o (for многоочитый)
+    'оу' => 'u',     # Uk digraph (recommended Unicode composition)
+    'Оу' => 'U',     # Uk digraph uppercase
+    'ОУ' => 'U',     # Uk digraph all caps
+    'ѹ' => 'u',      # Deprecated uk ligature (U+0479)
+    'Ѹ' => 'U',      # Deprecated uk ligature capital (U+0478)
     'ꙋ' => 'ū',      # Monograph uk (with macron)
+    'Ꙋ' => 'Ū',      # Monograph uk capital (with macron)
     
     # Iotated letters
     'ꙗ' => 'i͡a',    # Iotated A (with tie)
