@@ -1,0 +1,146 @@
+use Lang::Transliterate :ALL;
+
+unit class Lang::Transliterate::Fa::UN does Lang::Transliterate::Transliterator;
+
+# Persian UN Transliteration
+# Based on the United Nations romanization standard from 2012
+
+my %base-mappings = (
+    # Basic Persian letters (using hex codes to avoid Unicode issues)
+    "\c[0x0627]" => 'ā',      # alef (ا) - long a, ʾ at word beginning
+    "\c[0x0628]" => 'b',      # be (ب)
+    "\c[0x067E]" => 'p',      # pe (پ)
+    "\c[0x062A]" => 't',      # te (ت)
+    "\c[0x062B]" => 's',      # se (ث) - plain s (simplified from earlier)
+    "\c[0x062C]" => 'j',      # jim (ج)
+    "\c[0x0686]" => 'č',      # che (چ) - c with caron
+    "\c[0x062D]" => 'h',      # he jimi (ح) - plain h (simplified)
+    "\c[0x062E]" => 'x',      # khe (خ) - x (not kh)
+    "\c[0x062F]" => 'd',      # dal (د)
+    "\c[0x0630]" => 'z',      # zal (ذ) - plain z (simplified)
+    "\c[0x0631]" => 'r',      # re (ر)
+    "\c[0x0632]" => 'z',      # ze (ز)
+    "\c[0x0698]" => 'ž',      # zhe (ژ) - z with caron
+    "\c[0x0633]" => 's',      # sin (س)
+    "\c[0x0634]" => 'š',      # shin (ش) - s with caron
+    "\c[0x0635]" => 's',      # sad (ص) - plain s (simplified)
+    "\c[0x0636]" => 'z',      # zad (ض) - plain z (simplified)
+    "\c[0x0637]" => 't',      # ta (ط) - plain t (simplified)
+    "\c[0x0638]" => 'z',      # za (ظ) - plain z (simplified)
+    "\c[0x0639]" => 'ʿ',      # eyn (ع) - left half ring
+    "\c[0x063A]" => 'q',      # gheyn (غ) - q (not gh)
+    "\c[0x0641]" => 'f',      # fe (ف)
+    "\c[0x0642]" => 'q',      # qaf (ق)
+    "\c[0x06A9]" => 'k',      # kaf (ک)
+    "\c[0x06AF]" => 'g',      # gaf (گ)
+    "\c[0x0644]" => 'l',      # lam (ل)
+    "\c[0x0645]" => 'm',      # mim (م)
+    "\c[0x0646]" => 'n',      # nun (ن)
+    "\c[0x0648]" => 'v',      # vav (و) - as consonant v
+    "\c[0x0647]" => 'h',      # he (ه) - h (not omitted at end)
+    "\c[0x06CC]" => 'y',      # ye (ی)
+    
+    # Hamza forms
+    "\c[0x0621]" => 'ʾ',      # hamza (ء) - right half ring
+    "\c[0x0623]" => 'ʾ',      # alef with hamza above (أ)
+    "\c[0x0624]" => 'ʾ',      # vav with hamza above (ؤ)
+    "\c[0x0626]" => 'ʾ',      # ye with hamza above (ئ)
+    
+    # Special forms
+    "\c[0x0622]" => 'ā',      # alef madda (آ)
+    "\c[0x0629]" => '',       # te marbuta (ة) - not used in Persian
+    
+    # Short vowels (diacritics - rarely written)
+    "\c[0x064E]" => 'a',      # fatha (َ) - short a
+    "\c[0x064F]" => 'o',      # zamma (ُ) - short o
+    "\c[0x0650]" => 'e',      # kasra (ِ) - short e
+    
+    # Long vowels and diphthongs
+    "\c[0x064E]\c[0x0627]" => 'ā',     # fatha + alef → ā
+    "\c[0x064F]\c[0x0648]" => 'u',     # zamma + vav → u (not ū)
+    "\c[0x0650]\c[0x06CC]" => 'i',     # kasra + ye → i (not ī)
+    "\c[0x064E]\c[0x0648]" => 'ow',    # fatha + vav → ow (diphthong)
+    "\c[0x064E]\c[0x06CC]" => 'ey',    # fatha + ye → ey (diphthong)
+    
+    # Special Persian vowel combinations
+    "\c[0x0648]\c[0x064F]" => 'o',     # vav with zamma → o
+    "\c[0x064E]\c[0x06CC]" => 'ā',     # fatha + ye at word end → ā
+    "\c[0x06CC]\c[0x0670]" => 'ā',     # ye + superscript alef → ā
+    
+    # Final ye forms
+    "\c[0x06CC]" => '–e',     # ye at word end preceded by consonant → -e
+    "\c[0x06C0]" => '–ye',    # he ye (ۀ) → -ye
+    
+    # Digits
+    "\c[0x06F0]" => '0',      # Persian zero (۰)
+    "\c[0x06F1]" => '1',      # Persian one (۱)
+    "\c[0x06F2]" => '2',      # Persian two (۲)
+    "\c[0x06F3]" => '3',      # Persian three (۳)
+    "\c[0x06F4]" => '4',      # Persian four (۴)
+    "\c[0x06F5]" => '5',      # Persian five (۵)
+    "\c[0x06F6]" => '6',      # Persian six (۶)
+    "\c[0x06F7]" => '7',      # Persian seven (۷)
+    "\c[0x06F8]" => '8',      # Persian eight (۸)
+    "\c[0x06F9]" => '9',      # Persian nine (۹)
+);
+
+method get-mappings(--> Hash) {
+    return %base-mappings;
+}
+
+method get-reverse-mappings(--> List) {
+    # Persian UN reverse mappings
+    return (
+        # Multi-character mappings first
+        '–ye' => "\c[0x06C0]",
+        '–e' => "\c[0x06CC]",
+        'ow' => "\c[0x064E]\c[0x0648]",
+        'ey' => "\c[0x064E]\c[0x06CC]",
+        
+        # Single characters with diacritics
+        'ā' => "\c[0x0627]",
+        'č' => "\c[0x0686]",
+        'x' => "\c[0x062E]",
+        'ž' => "\c[0x0698]",
+        'š' => "\c[0x0634]",
+        'ʿ' => "\c[0x0639]",
+        'ʾ' => "\c[0x0621]",
+        'i' => "\c[0x0650]\c[0x06CC]",
+        'u' => "\c[0x064F]\c[0x0648]",
+        
+        # Basic letters (q maps to both ق and غ)
+        'b' => "\c[0x0628]",
+        'p' => "\c[0x067E]",
+        't' => "\c[0x062A]",
+        'j' => "\c[0x062C]",
+        'd' => "\c[0x062F]",
+        'r' => "\c[0x0631]",
+        'z' => "\c[0x0632]",
+        's' => "\c[0x0633]",
+        'f' => "\c[0x0641]",
+        'q' => "\c[0x0642]",  # Could also be غ
+        'k' => "\c[0x06A9]",
+        'g' => "\c[0x06AF]",
+        'l' => "\c[0x0644]",
+        'm' => "\c[0x0645]",
+        'n' => "\c[0x0646]",
+        'v' => "\c[0x0648]",
+        'h' => "\c[0x0647]",
+        'y' => "\c[0x06CC]",
+        'a' => "\c[0x064E]",
+        'o' => "\c[0x064F]",
+        'e' => "\c[0x0650]",
+        
+        # Digits
+        '0' => "\c[0x06F0]",
+        '1' => "\c[0x06F1]",
+        '2' => "\c[0x06F2]",
+        '3' => "\c[0x06F3]",
+        '4' => "\c[0x06F4]",
+        '5' => "\c[0x06F5]",
+        '6' => "\c[0x06F6]",
+        '7' => "\c[0x06F7]",
+        '8' => "\c[0x06F8]",
+        '9' => "\c[0x06F9]",
+    );
+}
