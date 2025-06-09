@@ -1,0 +1,155 @@
+=begin pod
+
+=head1 NAME
+
+Lang::Transliterate::Sa::IAST - IAST (International Alphabet of Sanskrit Transliteration) module
+
+=head1 SYNOPSIS
+
+    use Lang::Transliterate;
+    use Lang::Transliterate::Sa::IAST;
+
+    # Create IAST transliterator
+    my $iast = Lang::Transliterate::Sa::IAST.new;
+
+    # Forward transliteration (Devanagari to Latin IAST)
+    say transliterate('संस्कृतम्', $iast);  # saṁskṛtam
+
+    # Using the transliterate function
+    say transliterate('नमस्ते', $iast);     # namaste
+    say transliterate('धर्म', $iast);       # dharma
+    say transliterate('कर्म', $iast);       # karma
+
+    # Direct method calls
+    say $iast.transliterate-context-aware('योग');  # yoga
+
+    # Reverse transliteration (Latin IAST to Devanagari)
+    say $iast.transliterate-reverse('namaste');    # नमस्ते
+    say $iast.transliterate-reverse('saṁskṛtam');  # संस्कृतम्
+
+    # Case-preserving transliteration
+    say $iast.transliterate-preserve-case('राम Rama कृष्ण');  # rāma Rama kṛṣṇa
+
+    # Batch processing
+    my $text = "गीता\nवेद\nउपनिषद्";
+    say $iast.transliterate-lines($text);  # gītā\nveda\nupaniṣad
+
+=head1 DESCRIPTION
+
+This module implements the IAST (International Alphabet of Sanskrit Transliteration) 
+standard for transliterating Devanagari script to Latin script and vice versa.
+
+IAST is widely used in academic Sanskrit studies and provides an unambiguous 
+representation of Devanagari text using Latin characters with diacritical marks.
+
+=head2 Features
+
+=item Complete character support for all Devanagari characters
+=item Context-aware transliteration with proper inherent vowel handling
+=item Support for virama (halant) sequences
+=item Vowel sign (matra) combinations
+=item Nukta character support for foreign sounds
+=item Vedic extensions and accent marks
+=item Reverse transliteration from IAST to Devanagari
+=item Case-preserving transliteration for proper names
+=item Batch processing methods
+=item Unicode normalization support
+
+=head2 Character Mappings
+
+=head3 Vowels
+
+    अ → a    आ → ā    इ → i    ई → ī
+    उ → u    ऊ → ū    ऋ → ṛ    ॠ → ṝ
+    ऌ → ḷ    ॡ → ḹ    ए → e    ऐ → ai
+    ओ → o    औ → au
+
+=head3 Consonants
+
+    क → ka   ख → kha  ग → ga   घ → gha  ङ → ṅa
+    च → ca   छ → cha  ज → ja   झ → jha  ञ → ña
+    ट → ṭa   ठ → ṭha  ड → ḍa   ढ → ḍha  ण → ṇa
+    त → ta   थ → tha  द → da   ध → dha  न → na
+    प → pa   फ → pha  ब → ba   भ → bha  म → ma
+    य → ya   र → ra   ल → la   व → va
+    श → śa   ष → ṣa   स → sa   ह → ha
+
+=head3 Special Characters
+
+    ं → ṁ (anusvara)
+    ः → ḥ (visarga)
+    ँ → m̐ (candrabindu)
+    ऽ → ' (avagraha)
+    ॐ → oṁ (om)
+
+=head3 Nukta Variants
+
+    क़ → qa   ख़ → xa   ग़ → ġa   ज़ → za
+    ड़ → ṛa   ढ़ → ṛha  फ़ → fa
+
+=head3 Numbers
+
+    ० → 0    १ → 1    २ → 2    ३ → 3    ४ → 4
+    ५ → 5    ६ → 6    ७ → 7    ८ → 8    ९ → 9
+
+=head2 Methods
+
+=head3 transliterate-context-aware
+
+    method transliterate-context-aware(Str $text --> Str)
+
+Main transliteration method that handles context-aware processing of Devanagari text.
+
+=head3 transliterate-reverse
+
+    method transliterate-reverse(Str $text --> Str)
+
+Reverse transliteration from IAST Latin to Devanagari.
+
+=head3 transliterate-preserve-case
+
+    method transliterate-preserve-case(Str $text --> Str)
+
+Transliterates while preserving the case of capitalized words (useful for proper names).
+
+=head3 transliterate-lines
+
+    method transliterate-lines(Str $text --> Str)
+
+Processes text line by line, useful for batch processing.
+
+=head3 transliterate-words
+
+    method transliterate-words(Str $text --> Str)
+
+Processes text word by word.
+
+=head2 Inherent Vowel Rules
+
+In Devanagari, consonants have an inherent 'a' vowel unless:
+- Followed by a vowel sign (matra)
+- Followed by a virama (halant)
+- Part of a conjunct consonant
+- At the end of certain words (context-dependent)
+
+This module correctly handles these rules for accurate transliteration.
+
+=head2 Unicode Considerations
+
+The module handles:
+- Grapheme clusters (single visual units composed of multiple codepoints)
+- Unicode normalization (NFC/NFD)
+- Zero-width joiners and non-joiners
+- Precomposed and decomposed character forms
+
+=head1 AUTHOR
+
+Lang::Transliterate Contributors
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2024
+
+This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
+
+=end pod
