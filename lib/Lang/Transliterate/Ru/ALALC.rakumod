@@ -106,7 +106,9 @@ method get-reverse-mappings(--> List) {
         'ę' => 'ѧ',
         'ǫ' => 'ѫ',
         'ʺ' => 'ъ',
+        '"' => 'ъ',
         'ʹ' => 'ь',
+        "'" => 'ь',
         
         # Simple letters
         'a' => 'а',

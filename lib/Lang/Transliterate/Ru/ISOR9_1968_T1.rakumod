@@ -88,8 +88,10 @@ method get-reverse-mappings(--> List) {
         'ŝ' => 'щ',
         'šč' => 'щ',     # Alternative form
         'ʺ' => 'ъ',
+        '"' => 'ъ',
         'y' => 'ы',
         'ʹ' => 'ь',
+        "'" => 'ь',
         'è' => 'э',
         'û' => 'ю',
         'ju' => 'ю',     # Alternative form

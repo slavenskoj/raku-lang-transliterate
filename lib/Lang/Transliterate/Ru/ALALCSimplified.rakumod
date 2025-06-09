@@ -72,7 +72,9 @@ method get-reverse-mappings(--> List) {
         
         # Modifier letters
         'ʺ' => 'ъ',
+        '"' => 'ъ',
         'ʹ' => 'ь',
+        "'" => 'ь',
         
         # Simple letters
         'a' => 'а',
