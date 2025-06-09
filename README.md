@@ -2,13 +2,31 @@
 
 A comprehensive Raku library for transliterating text between different writing systems.
 
+## Features
+
+**Lang::Transliterate** provides context-aware transliteration with several advanced features:
+
+- **Context-Aware Transliteration**: The library intelligently handles character combinations and contextual rules.
+
+- **Bidirectional Conversion**: Most transliteration schemes support both forward transliteration (native script to Latin or other script) and reverse transliteration, allowing round-trip conversions.
+
+- **Case Preservation**: The library automatically preserves the case of the original text when necessary, intelligently handling multi-character mappings.
+
+- **Multiple Standards**: Choose from various transliteration standards based on your needs. Covers most standards you'd want to use, and a few you don't.
+
+- **Ancient and Historical Scripts**: Support for ancient writing systems including Egyptian hieroglyphics, Imperial Aramaic, Paleo-Hebrew, and Church Slavonic, with multiple scholarly transliteration standards.
+
+- **Klingon and Tolkien Runic:** Just getting started now.
+
+- **Extensible Architecture**: All transliterators implement a common interface, making it easy to add new scripts or customize existing ones. The modular design allows for language-specific rules and exceptions.
+
 ## Available Transliteration Systems
 
 ### General Systems
 
 | Module | Description |
 |--------|-------------|
-| `Lang::Transliterate::BasicASCII` | Basic ASCII fallback for any Unicode text |
+| `Lang::Transliterate::BasicASCII` | Basic ASCII fallback for a wide range of writing systems |
 | `Lang::Transliterate::ISO9_1995` | ISO 9:1995 standard for all Cyrillic scripts |
 
 ### Greek
@@ -64,7 +82,7 @@ A comprehensive Raku library for transliterating text between different writing 
 
 | Module | Description |
 |--------|-------------|
-| `Lang::Transliterate::En::TolkienRunic` | J.R.R. Tolkien's runic writing system |
+| `Lang::Transliterate::En::TolkienRunic` | J.R.R. Tolkien's runic writing system for English |
 
 #### Klingon (Tlh)
 
@@ -99,22 +117,22 @@ A comprehensive Raku library for transliterating text between different writing 
 
 | Module | Description |
 |--------|-------------|
-| `Lang::Transliterate::Arc::Arabic` | Imperial Aramaic to Arabic script |
-| `Lang::Transliterate::Arc::Brahmi` | Imperial Aramaic to Brahmi script |
-| `Lang::Transliterate::Arc::Cyrillic` | Imperial Aramaic to Cyrillic script |
-| `Lang::Transliterate::Arc::Geez` | Imperial Aramaic to Ethiopic script |
-| `Lang::Transliterate::Arc::Greek` | Imperial Aramaic to Greek script |
-| `Lang::Transliterate::Arc::Hebrew` | Imperial Aramaic to Hebrew script |
-| `Lang::Transliterate::Arc::Kharosthi` | Imperial Aramaic to Kharosthi script |
-| `Lang::Transliterate::Arc::Latin` | Imperial Aramaic to Latin script |
-| `Lang::Transliterate::Arc::Maalouli` | Imperial Aramaic to Neo-Aramaic script |
-| `Lang::Transliterate::Arc::Nabataean` | Imperial Aramaic to Nabataean script |
-| `Lang::Transliterate::Arc::Parthian` | Imperial Aramaic to Parthian script |
-| `Lang::Transliterate::Arc::Phoenician` | Imperial Aramaic to Phoenician script |
-| `Lang::Transliterate::Arc::ProtoSinaitic` | Imperial Aramaic to Proto-Sinaitic |
-| `Lang::Transliterate::Arc::SouthArabian` | Imperial Aramaic to South Arabian |
-| `Lang::Transliterate::Arc::Syriac` | Imperial Aramaic to Syriac script |
-| `Lang::Transliterate::Arc::Turkic` | Imperial Aramaic to Old Turkic runes |
+| `Lang::Transliterate::Arc::Arabic` | Imperial Aramaic **↔** Arabic script |
+| `Lang::Transliterate::Arc::Brahmi` | Imperial Aramaic **↔** Brahmi script |
+| `Lang::Transliterate::Arc::Cyrillic` | Imperial Aramaic **↔** Cyrillic script |
+| `Lang::Transliterate::Arc::Geez` | Imperial Aramaic **↔** Ethiopic script |
+| `Lang::Transliterate::Arc::Greek` | Imperial Aramaic **↔** Greek script |
+| `Lang::Transliterate::Arc::Hebrew` | Imperial Aramaic **↔** Hebrew script |
+| `Lang::Transliterate::Arc::Kharosthi` | Imperial Aramaic **↔** Kharosthi script |
+| `Lang::Transliterate::Arc::Latin` | Imperial Aramaic **↔** Latin script |
+| `Lang::Transliterate::Arc::Maalouli` | Imperial Aramaic **↔** Neo-Aramaic script |
+| `Lang::Transliterate::Arc::Nabataean` | Imperial Aramaic **↔** Nabataean script |
+| `Lang::Transliterate::Arc::Parthian` | Imperial Aramaic **↔** Parthian script |
+| `Lang::Transliterate::Arc::Phoenician` | Imperial Aramaic **↔** Phoenician script |
+| `Lang::Transliterate::Arc::ProtoSinaitic` | Imperial Aramaic **↔** Proto-Sinaitic |
+| `Lang::Transliterate::Arc::SouthArabian` | Imperial Aramaic **↔** South Arabian |
+| `Lang::Transliterate::Arc::Syriac` | Imperial Aramaic **↔** Syriac script |
+| `Lang::Transliterate::Arc::Turkic` | Imperial Aramaic **↔** Old Turkic runes |
 
 #### Hebrew (He)
 
@@ -124,10 +142,10 @@ A comprehensive Raku library for transliterating text between different writing 
 | `Lang::Transliterate::He::HebrewAcademy1953` | Academy of Hebrew Language 1953 rules |
 | `Lang::Transliterate::He::HebrewAcademy2006` | Academy of Hebrew Language 2006 rules |
 | `Lang::Transliterate::He::ISO259` | ISO 259 international standard |
-| `Lang::Transliterate::He::PaleoHebrew` | Ancient Hebrew script transliteration |
-| `Lang::Transliterate::He::SBLAcademic` | Society of Biblical Literature academic style |
-| `Lang::Transliterate::He::SBLGeneralPurpose` | SBL general purpose transliteration |
-| `Lang::Transliterate::He::Samaritan` | Samaritan Hebrew transliteration |
+| `Lang::Transliterate::He::PaleoHebrew` | Paleo-Hebrew script |
+| `Lang::Transliterate::He::SBLAcademic` | Society of Biblical Literature academic transliteration |
+| `Lang::Transliterate::He::SBLGeneralPurpose` | Society of Biblical Literature general purpose transliteration |
+| `Lang::Transliterate::He::Samaritan` | Samaritan Hebrew |
 
 ### Slavic Languages
 
@@ -141,8 +159,8 @@ A comprehensive Raku library for transliterating text between different writing 
 | `Lang::Transliterate::Be::ISO9` | ISO 9 transliteration |
 | `Lang::Transliterate::Be::National2000` | Belarusian national standard 2000 |
 | `Lang::Transliterate::Be::National2007` | Belarusian national standard 2007 |
-| `Lang::Transliterate::Be::National2023` | Current Belarusian official standard |
-| `Lang::Transliterate::Be::Sci` | Scientific (linguistic) transliteration |
+| `Lang::Transliterate::Be::National2023` | Belarusian national standard 2023 |
+| `Lang::Transliterate::Be::Sci` | Scientific linguistic transliteration |
 
 #### Bulgarian (Bg)
 
@@ -151,17 +169,17 @@ A comprehensive Raku library for transliterating text between different writing 
 | `Lang::Transliterate::Bg::ALALC` | ALA-LC romanization |
 | `Lang::Transliterate::Bg::BGNPCGN` | US/UK geographic names standard |
 | `Lang::Transliterate::Bg::BritishStandard` | British Standard romanization |
-| `Lang::Transliterate::Bg::Danchev` | Andrei Danchev's system |
+| `Lang::Transliterate::Bg::Danchev` | Andrei Danchev’s system |
 | `Lang::Transliterate::Bg::ISO9` | ISO 9 transliteration |
 | `Lang::Transliterate::Bg::Official2006` | Bulgarian official system 2006 |
-| `Lang::Transliterate::Bg::Sci` | Scientific (linguistic) transliteration |
+| `Lang::Transliterate::Bg::Sci` | Scientific linguistic transliteration |
 
 #### Church Slavonic (Cu)
 
 | Module | Description |
 |--------|-------------|
 | `Lang::Transliterate::Cu::ALALC` | ALA-LC romanization |
-| `Lang::Transliterate::Cu::Sci` | Scientific (linguistic) transliteration |
+| `Lang::Transliterate::Cu::Sci` | Scientific linguistic transliteration |
 
 #### Macedonian (Mk)
 
@@ -171,7 +189,7 @@ A comprehensive Raku library for transliterating text between different writing 
 | `Lang::Transliterate::Mk::BGNPCGN` | US/UK geographic names standard |
 | `Lang::Transliterate::Mk::ISO9` | ISO 9 transliteration |
 | `Lang::Transliterate::Mk::ISO9_1968` | ISO 9:1968 standard |
-| `Lang::Transliterate::Mk::Sci` | Scientific (linguistic) transliteration |
+| `Lang::Transliterate::Mk::Sci` | Scientific linguistic transliteration |
 
 #### Russian (Ru)
 
@@ -190,28 +208,28 @@ A comprehensive Raku library for transliterating text between different writing 
 | `Lang::Transliterate::Ru::ISOR9_1968_T1` | ISO/R 9:1968 Table 1 |
 | `Lang::Transliterate::Ru::ISOR9_1968_T1_ALT` | ISO/R 9:1968 Table 1 alternative mappings |
 | `Lang::Transliterate::Ru::ISOR9_1968_T2` | ISO/R 9:1968 Table 2 |
-| `Lang::Transliterate::Ru::MID2113` | Ministry of Internal Affairs Order 2113 |
-| `Lang::Transliterate::Ru::MVD310_1997` | Russian passport standard (1997-2010) |
-| `Lang::Transliterate::Ru::MVD782_2000` | Driver's license standard (2000) |
-| `Lang::Transliterate::Ru::MVD995_2015` | Current passport standard (2015+) |
-| `Lang::Transliterate::Ru::MosMetro` | Moscow Metro signage romanization |
-| `Lang::Transliterate::Ru::Sci` | Scientific (linguistic) transliteration |
+| `Lang::Transliterate::Ru::MID2113` | MID 2113 passport standard (2020) |
+| `Lang::Transliterate::Ru::MVD310_1997` | MVD 310  passport standard (1997-2010) |
+| `Lang::Transliterate::Ru::MVD782_2000` | MVD 782 driver's license standard (2000) |
+| `Lang::Transliterate::Ru::MVD995_2015` | MVD 995 passport standard (2015) |
+| `Lang::Transliterate::Ru::MosMetro` | Moscow Metro signage |
+| `Lang::Transliterate::Ru::Sci` | Scientific linguistic transliteration |
 | `Lang::Transliterate::Ru::Telegrams` | Soviet telegraph standard |
-| `Lang::Transliterate::Ru::UN` | United Nations romanization system |
-| `Lang::Transliterate::Ru::YandexMaps` | Yandex Maps transliteration |
+| `Lang::Transliterate::Ru::UN` | United Nations system |
+| `Lang::Transliterate::Ru::YandexMaps` | Yandex Maps |
 | `Lang::Transliterate::Ru::YandexMoney` | Yandex Money/payment systems |
 
 #### Rusyn (Rue)
 
 | Module | Description |
 |--------|-------------|
-| `Lang::Transliterate::Rue::Sci` | Scientific (linguistic) transliteration |
+| `Lang::Transliterate::Rue::Sci` | Scientific linguistic transliteration |
 
 #### Serbian (Sr)
 
 | Module | Description |
 |--------|-------------|
-| `Lang::Transliterate::Sr::Sci` | Scientific (linguistic) transliteration |
+| `Lang::Transliterate::Sr::Sci` | Scientific linguistic transliteration |
 
 #### Ukrainian (Uk)
 
@@ -225,15 +243,15 @@ A comprehensive Raku library for transliterating text between different writing 
 | `Lang::Transliterate::Uk::Derzhstandart1995` | Ukrainian national standard 1995 |
 | `Lang::Transliterate::Uk::GOST1971` | Soviet GOST 16876-71 |
 | `Lang::Transliterate::Uk::GOST1986` | Late Soviet standard |
-| `Lang::Transliterate::Uk::ISO1954` | Early ISO standard |
-| `Lang::Transliterate::Uk::ISO1968Basic` | ISO basic system |
-| `Lang::Transliterate::Uk::ISO1968Ukrainian` | ISO Ukrainian-specific system |
+| `Lang::Transliterate::Uk::ISO1954` | Early ISO standard 1954 |
+| `Lang::Transliterate::Uk::ISO1968Basic` | ISO basic system 1968 |
+| `Lang::Transliterate::Uk::ISO1968Ukrainian` | ISO Ukrainian-specific system 1968 |
 | `Lang::Transliterate::Uk::ISO1995` | ISO 9:1995 standard |
 | `Lang::Transliterate::Uk::National1996` | Ukrainian national standard 1996 |
-| `Lang::Transliterate::Uk::National2010` | Current official Ukrainian standard |
+| `Lang::Transliterate::Uk::National2010` | Ukrainian national standard 2010 |
 | `Lang::Transliterate::Uk::Passport2004` | Ukrainian passport standard 2004 |
 | `Lang::Transliterate::Uk::Passport2007` | Ukrainian passport standard 2007-2010 |
-| `Lang::Transliterate::Uk::Sci` | Scientific (linguistic) transliteration |
+| `Lang::Transliterate::Uk::Sci` | Scientific linguistic transliteration |
 
 ## Usage
 
@@ -241,58 +259,96 @@ A comprehensive Raku library for transliterating text between different writing 
 
 ```raku
 use Lang::Transliterate;
+use Lang::Transliterate::Egy::Gardiner1927;
+use Lang::Transliterate::Sa::IAST;
+use Lang::Transliterate::Yi::YIVO;
 
-# Transliterate from native script to Latin
-my $russian = "Привет мир";
-my $latin = transliterate($russian, 'Ru::Sci');
-say $latin; # "Privet mir"
+# Ancient Egyptian hieroglyphics (Gardiner's system)
+my $hieroglyphic = "𓊪𓏏𓇯𓃭𓅓𓏏";
+my $gardiner = Lang::Transliterate::Egy::Gardiner1927.new;
+say transliterate($hieroglyphic, $gardiner); # "pt-ḥ-m-t"
 
-# Different systems produce different results
-say transliterate($russian, 'Ru::BGNPCGN');   # "Privet mir"
-say transliterate($russian, 'Ru::ISO9_1995'); # "Privet mir"
+# Sanskrit IAST 
+my $sanskrit = "भगवद्गीता";
+my $iast = Lang::Transliterate::Sa::IAST.new;
+say transliterate($sanskrit, $iast); # "bhagavadgītā"
+
+# Yiddish YIVO standard
+my $yiddish = "ייִדיש";
+my $yivo = Lang::Transliterate::Yi::YIVO.new;
+say transliterate($yiddish, $yivo); # "yidish"
 ```
 
 ### Reverse Transliteration (Detransliteration)
 
 ```raku
 use Lang::Transliterate;
+use Lang::Transliterate::Sa::IAST;
+use Lang::Transliterate::He::CommonIsraeli;
 
-# Convert from Latin back to native script
-my $latin = "Privet mir";
-my $russian = detransliterate($latin, 'Ru::Sci');
-say $russian; # "Привет мир"
+# Convert romanized text back to original script
+my $romanized = "śaṅkarācārya";
+my $iast = Lang::Transliterate::Sa::IAST.new;
+my $devanagari = detransliterate($romanized, $iast);
+say $devanagari; # "शङ्कराचार्य"
 
-# Works with other languages too
-my $hebrew_latin = "shalom olam";
-my $hebrew = detransliterate($hebrew_latin, 'He::CommonIsraeli');
-say $hebrew; # "שלום עולם"
+# Reconstruct Hebrew from common transliteration
+my $name = "Yerushalayim";
+my $israeli = Lang::Transliterate::He::CommonIsraeli.new;
+my $hebrew = detransliterate($name, $israeli);
+say $hebrew; # "ירושלים"
 ```
 
-### Working with Different Scripts
+### Working with Ancient Scripts
 
 ```raku
 use Lang::Transliterate;
+use Lang::Transliterate::Arc::Hebrew;
+use Lang::Transliterate::Arc::Arabic;
+use Lang::Transliterate::Arc::Syriac;
+use Lang::Transliterate::Arc::Phoenician;
+use Lang::Transliterate::Egy::Gardiner1927;
+use Lang::Transliterate::Egy::Allen2000;
 
-# Arabic transliteration
-my $arabic = "السلام عليكم";
-say transliterate($arabic, 'Ar::BGNPCGN'); # "as-salām ʿalaykum"
+# Imperial Aramaic to multiple scripts
+my $aramaic = "𐡀𐡁𐡂𐡃";
 
-# Sanskrit IAST
-my $sanskrit = "संस्कृतम्";
-say transliterate($sanskrit, 'Sa::IAST'); # "saṃskṛtam"
+my $to-hebrew = Lang::Transliterate::Arc::Hebrew.new;
+say transliterate($aramaic, $to-hebrew);     # "אבגד"
 
-# Greek
-my $greek = "Ελληνικά";
-say transliterate($greek, 'El::ISO843'); # "Ellīniká"
+my $to-arabic = Lang::Transliterate::Arc::Arabic.new;
+say transliterate($aramaic, $to-arabic);     # "ابجد"
+
+my $to-syriac = Lang::Transliterate::Arc::Syriac.new;
+say transliterate($aramaic, $to-syriac);     # "ܐܒܓܕ"
+
+my $to-phoenician = Lang::Transliterate::Arc::Phoenician.new;
+say transliterate($aramaic, $to-phoenician); # "𐤀𐤁𐤂𐤃"
+
+# Different Egyptian transliteration standards
+my $cartouche = "𓈖𓆑𓂋𓏏𓇳𓏏𓇋";
+my $gardiner = Lang::Transliterate::Egy::Gardiner1927.new;
+say transliterate($cartouche, $gardiner);    # "nfr.t-ỉ.t-ỉ"
+
+my $allen = Lang::Transliterate::Egy::Allen2000.new;
+say transliterate($cartouche, $allen);       # "nfrt-jty"
 ```
 
-### Case Preservation
-
-The library automatically preserves the case of the original text:
+### Special Features
 
 ```raku
-my $text = "МОСКВА Россия";
-say transliterate($text, 'Ru::Sci'); # "MOSKVA Rossija"
+use Lang::Transliterate;
+use Lang::Transliterate::En::TolkienRunic;
+use Lang::Transliterate::El::ISO843;
+
+# English to Tolkien's runic system
+my $ring-text = "One transliterator to rule them all";
+say transliterate($ring-text, $tolkien); # "ᚩᚾᛖ ᛏᚱᚪᚾᛋᛚᛁᛏᛖᚱᚪᛏᚩᚱ ᛏᚩ ᚱᚢᛚᛖ ᚦᛖᛗ ᚪᛚᛚ"
+
+# Case preservation in Greek
+my $greek = "ΑΘΗΝΑ Ελλάδα";
+my $iso843 = Lang::Transliterate::El::ISO843.new;
+say transliterate($greek, $iso843); # "ATHĪNA Elláda"
 ```
 
 ## License

@@ -108,3 +108,27 @@ method transliterate-context-aware(Str $text, :%mappings = self.get-mappings() -
     
     return $result;
 }
+
+# Override reverse transliteration to strip Hebrew vowel marks (niqqud)
+method detransliterate-context-aware(Str $text --> Str) {
+    # First strip all Hebrew vowel marks and cantillation marks
+    # Hebrew points: U+0591-U+05C7, U+05F0-U+05F4
+    my $stripped = $text.subst(/<[\x[0591]..\x[05C7] \x[05F0]..\x[05F4]]>/, '', :g);
+    
+    # Then apply the reverse mappings
+    my @mappings = self.get-reverse-mappings();
+    my %reverse-map = @mappings;
+    
+    my $result = '';
+    my @chars = $stripped.comb;
+    
+    for @chars -> $char {
+        if %reverse-map{$char}:exists {
+            $result ~= %reverse-map{$char};
+        } else {
+            $result ~= $char;
+        }
+    }
+    
+    return $result;
+}

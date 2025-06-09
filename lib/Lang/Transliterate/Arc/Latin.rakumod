@@ -68,3 +68,12 @@ method get-reverse-mappings(--> List) {
         's' => "\c[0x10851]",   # Could be regular s or ṣ
     );
 }
+
+# Latin uses vowels as separate letters, so we need to strip them when converting back
+method detransliterate-context-aware(Str $text, :%reverse-mappings = self.get-reverse-mappings().Hash --> Str) {
+    # First, strip all Latin vowels (a, e, i, o, u and their variants)
+    my $consonantal = $text.subst(/:i <[aeiouāēīōūăĕĭŏŭàèìòùáéíóúâêîôûäëïöüæœ]>/, '', :g);
+    
+    # Then apply the standard detransliteration
+    return self.detransliterate($consonantal, :%reverse-mappings);
+}

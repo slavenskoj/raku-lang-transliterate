@@ -94,3 +94,16 @@ method transliterate-context-aware(Str $text, :%mappings = self.get-mappings() -
     
     return $result;
 }
+
+# Old Turkic has vowel letters that need to be stripped when converting back
+method detransliterate-context-aware(Str $text, :%reverse-mappings = self.get-reverse-mappings().Hash --> Str) {
+    # Strip Old Turkic vowel letters:
+    # U+10C00-U+10C07: Various forms of A
+    # U+10C0B-U+10C0E: Various forms of E
+    # U+10C10-U+10C12: Various forms of I
+    # U+10C26-U+10C2E: Various forms of O/U
+    my $consonantal = $text.subst(/<[\c[0x10C00]..\c[0x10C07]\c[0x10C0B]..\c[0x10C0E]\c[0x10C10]..\c[0x10C12]\c[0x10C26]..\c[0x10C2E]]>/, '', :g);
+    
+    # Then apply the standard detransliteration
+    return self.detransliterate($consonantal, :%reverse-mappings);
+}

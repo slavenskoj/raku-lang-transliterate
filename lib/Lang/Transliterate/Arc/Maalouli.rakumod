@@ -65,3 +65,12 @@ method get-reverse-mappings(--> List) {
         't' => "\c[0x10855]",   # Maalouli thaq → Imperial Aramaic Taw
     );
 }
+
+# Maalouli (as represented here in Latin) uses vowels that need to be stripped
+method detransliterate-context-aware(Str $text, :%reverse-mappings = self.get-reverse-mappings().Hash --> Str) {
+    # Since this module uses Latin transliteration, strip Latin vowels
+    my $consonantal = $text.subst(/:i <[aeiouāēīōūăĕĭŏŭàèìòùáéíóúâêîôûäëïöü]>/, '', :g);
+    
+    # Then apply the standard detransliteration
+    return self.detransliterate($consonantal, :%reverse-mappings);
+}

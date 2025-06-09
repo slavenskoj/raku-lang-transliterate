@@ -88,3 +88,16 @@ method transliterate-context-aware(Str $text, :%mappings = self.get-mappings() -
     
     return $result;
 }
+
+# Brahmi uses vowel diacritics, so we need to strip them when converting back
+method detransliterate-context-aware(Str $text, :%reverse-mappings = self.get-reverse-mappings().Hash --> Str) {
+    # Strip all Brahmi vowel signs (U+11038-U+1104D are combining vowel signs)
+    # Also strip independent vowels (U+11005-U+11012, except those mapped as consonants)
+    my $consonantal = $text.subst(/<[\c[0x11038]..\c[0x1104D]\c[0x11005]..\c[0x11012]]>/, '', :g);
+    
+    # Also remove virama (U+11046) which cancels inherent vowel
+    $consonantal = $consonantal.subst(/\c[0x11046]/, '', :g);
+    
+    # Then apply the standard detransliteration
+    return self.detransliterate($consonantal, :%reverse-mappings);
+}

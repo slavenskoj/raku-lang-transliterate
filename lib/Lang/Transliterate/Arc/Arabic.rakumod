@@ -69,6 +69,30 @@ method get-reverse-mappings(--> List) {
     );
 }
 
+# Override reverse transliteration to strip Arabic vowel marks (harakat)
+method detransliterate-context-aware(Str $text --> Str) {
+    # First strip all Arabic vowel marks and diacritics
+    # Arabic diacritics: U+064B-U+065F, U+0670
+    my $stripped = $text.subst(/<[\x[064B]..\x[065F] \x[0670]]>/, '', :g);
+    
+    # Then apply the reverse mappings
+    my @mappings = self.get-reverse-mappings();
+    my %reverse-map = @mappings;
+    
+    my $result = '';
+    my @chars = $stripped.comb;
+    
+    for @chars -> $char {
+        if %reverse-map{$char}:exists {
+            $result ~= %reverse-map{$char};
+        } else {
+            $result ~= $char;
+        }
+    }
+    
+    return $result;
+}
+
 # Arabic requires special handling for contextual forms
 method transliterate-context-aware(Str $text, :%mappings = self.get-mappings() --> Str) {
     my $result = '';

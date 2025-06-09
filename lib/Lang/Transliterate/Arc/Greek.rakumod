@@ -89,3 +89,12 @@ method get-reverse-mappings(--> List) {
         "\c[0x03C4]" => "\c[0x10855]",   # τ → 𐡕 tau
     );
 }
+
+# Greek uses vowels as separate letters, so we need to strip them when converting back
+method detransliterate-context-aware(Str $text, :%reverse-mappings = self.get-reverse-mappings().Hash --> Str) {
+    # Strip all Greek vowels (Alpha, Epsilon, Eta, Iota, Omicron, Upsilon, Omega and their variants)
+    my $consonantal = $text.subst(/<[\c[0x0391]\c[0x03B1]\c[0x0395]\c[0x03B5]\c[0x0397]\c[0x03B7]\c[0x0399]\c[0x03B9]\c[0x039F]\c[0x03BF]\c[0x03A5]\c[0x03C5]\c[0x03A9]\c[0x03C9]\c[0x0386]\c[0x03AC]\c[0x0388]\c[0x03AD]\c[0x0389]\c[0x03AE]\c[0x038A]\c[0x03AF]\c[0x038C]\c[0x03CC]\c[0x038E]\c[0x03CD]\c[0x038F]\c[0x03CE]\c[0x03AA]\c[0x03CA]\c[0x03AB]\c[0x03CB]\c[0x0390]\c[0x03B0]]>/, '', :g);
+    
+    # Then apply the standard detransliteration
+    return self.detransliterate($consonantal, :%reverse-mappings);
+}

@@ -86,3 +86,34 @@ method transliterate-context-aware(Str $text, :%mappings = self.get-mappings() -
     
     return $result;
 }
+
+# Geez is a syllabic script where each character represents consonant+vowel
+# We need to normalize all syllabic forms to their base consonant form
+method detransliterate-context-aware(Str $text, :%reverse-mappings = self.get-reverse-mappings().Hash --> Str) {
+    # Convert all syllabic forms to their base (sixth order) form
+    # Each Geez consonant has 7 forms (orders) for different vowels
+    # We normalize to the sixth order (the ə vowel form) which we use as base
+    my $normalized = $text;
+    
+    # For each consonant series, replace all 7 orders with the base form
+    # The pattern is: base + 0-6 for the 7 orders
+    # Example: ሀ (U+1200) through ሇ (U+1207) all map to ሀ
+    for (
+        0x1200, 0x1208, 0x1210, 0x1218, 0x1220, 0x1228, 0x1230, 0x1238,
+        0x1240, 0x1248, 0x1250, 0x1258, 0x1260, 0x1268, 0x1270, 0x1278,
+        0x1280, 0x1288, 0x1290, 0x1298, 0x12A0, 0x12A8, 0x12B0, 0x12B8,
+        0x12C0, 0x12C8, 0x12D0, 0x12D8, 0x12E0, 0x12E8, 0x12F0, 0x12F8,
+        0x1300, 0x1308, 0x1310, 0x1318, 0x1320, 0x1328, 0x1330, 0x1338,
+        0x1340, 0x1348
+    ) -> $base {
+        # Replace all 7 forms with the base form
+        for 0..7 -> $i {
+            my $char = "\c[{$base + $i}]";
+            my $base-char = "\c[$base]";
+            $normalized = $normalized.subst($char, $base-char, :g);
+        }
+    }
+    
+    # Then apply the standard detransliteration
+    return self.detransliterate($normalized, :%reverse-mappings);
+}

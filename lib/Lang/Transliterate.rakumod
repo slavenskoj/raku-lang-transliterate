@@ -11,6 +11,14 @@ role Transliterator is export {
         my %mappings = self.get-mappings();
         return apply-mapping($text, %mappings);
     }
+    
+    # Default implementation for context-aware detransliteration
+    # Can be overridden by specific transliterators
+    method detransliterate-context-aware(Str $text --> Str) {
+        my @mappings = self.get-reverse-mappings();
+        my %reverse-map = @mappings;
+        return apply-mapping($text, %reverse-map);
+    }
 }
 
 # Helper function to apply character mappings with intelligent capitalization
@@ -97,7 +105,5 @@ sub transliterate(Str $text, Transliterator $scheme --> Str) is export {
 
 # Reverse transliteration function
 sub detransliterate(Str $text, Transliterator $scheme --> Str) is export {
-    my @mappings = $scheme.get-reverse-mappings();
-    my %reverse-map = @mappings;
-    return apply-mapping($text, %reverse-map);
+    return $scheme.detransliterate-context-aware($text);
 }

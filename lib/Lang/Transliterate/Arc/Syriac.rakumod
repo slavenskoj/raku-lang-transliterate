@@ -61,3 +61,18 @@ method get-reverse-mappings(--> List) {
         "\c[0x072C]" => "\c[0x10855]",  # ܬ → 𐡕
     );
 }
+
+# Syriac uses vowel points (nuqzā), so we need to strip them when converting back
+method detransliterate-context-aware(Str $text, :%reverse-mappings = self.get-reverse-mappings().Hash --> Str) {
+    # Strip all Syriac vowel points (U+0730-U+074A range)
+    # These are combining marks that indicate vowels
+    my $consonantal = $text.subst(/<[\c[0x0730]..\c[0x074A]]>/, '', :g);
+    
+    # Also strip other Syriac marks that might affect the reading
+    # U+0700-U+070D are Syriac punctuation and format characters
+    # U+0711 is Syriac letter Superscript Alaph
+    $consonantal = $consonantal.subst(/<[\c[0x0700]..\c[0x070D]\c[0x0711]]>/, '', :g);
+    
+    # Then apply the standard detransliteration
+    return self.detransliterate($consonantal, :%reverse-mappings);
+}

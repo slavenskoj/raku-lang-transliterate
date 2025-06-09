@@ -116,3 +116,12 @@ method get-reverse-mappings(--> List) {
         "\c[0x0442]" => "\c[0x10855]",   # т → 𐡕
     );
 }
+
+# Cyrillic uses vowels as separate letters, so we need to strip them when converting back
+method detransliterate-context-aware(Str $text, :%reverse-mappings = self.get-reverse-mappings().Hash --> Str) {
+    # Strip all Cyrillic vowels (А, Е, Ё, И, І, О, У, Ы, Э, Ю, Я and their variants)
+    my $consonantal = $text.subst(/<[\c[0x0410]\c[0x0430]\c[0x0415]\c[0x0435]\c[0x0401]\c[0x0451]\c[0x0418]\c[0x0438]\c[0x0406]\c[0x0456]\c[0x0407]\c[0x0457]\c[0x041E]\c[0x043E]\c[0x0423]\c[0x0443]\c[0x042B]\c[0x044B]\c[0x042D]\c[0x044D]\c[0x042E]\c[0x044E]\c[0x042F]\c[0x044F]\c[0x0404]\c[0x0454]\c[0x040E]\c[0x045E]\c[0x0474]\c[0x0475]\c[0x0460]\c[0x0461]]>/, '', :g);
+    
+    # Then apply the standard detransliteration
+    return self.detransliterate($consonantal, :%reverse-mappings);
+}

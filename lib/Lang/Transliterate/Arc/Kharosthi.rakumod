@@ -88,3 +88,16 @@ method transliterate-context-aware(Str $text, :%mappings = self.get-mappings() -
     
     return $result;
 }
+
+# Kharosthi uses vowel diacritics, so we need to strip them when converting back
+method detransliterate-context-aware(Str $text, :%reverse-mappings = self.get-reverse-mappings().Hash --> Str) {
+    # Strip all Kharosthi vowel signs and combining marks (U+10A01-U+10A0F)
+    # Also strip other vowel-related characters (U+10A38-U+10A3A are vowel modifiers)
+    my $consonantal = $text.subst(/<[\c[0x10A01]..\c[0x10A0F]\c[0x10A38]..\c[0x10A3A]]>/, '', :g);
+    
+    # Also remove virama (U+10A3F) which cancels inherent vowel
+    $consonantal = $consonantal.subst(/\c[0x10A3F]/, '', :g);
+    
+    # Then apply the standard detransliteration
+    return self.detransliterate($consonantal, :%reverse-mappings);
+}
