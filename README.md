@@ -1,6 +1,14 @@
 # Lang::Transliterate
 
-A comprehensive Raku library for transliterating text between different writing systems.
+A comprehensive Raku library for transliterating text between different writing systems. Support for 130+ transliteration systems across 20+ languages.
+
+[![License: Artistic-2.0](https://img.shields.io/badge/License-Artistic%202.0-0298c3.svg)](https://opensource.org/licenses/Artistic-2.0)
+
+## Installation
+
+```bash
+zef install Lang::Transliterate
+```
 
 ## Features
 
@@ -344,8 +352,16 @@ my $iso843 = Lang::Transliterate::El::ISO843.new;
 say transliterate($greek, $iso843); # "ATHĪNA Elláda"
 ```
 
+## Author
+
+Danslav Slavenskoj
+
 ## License
 
 The Artistic License 2.0
 
 Copyright © 2025 Danslav Slavenskoj
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/slavenskoj/raku-lang-transliterate.

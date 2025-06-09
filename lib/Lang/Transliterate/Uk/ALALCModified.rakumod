@@ -58,10 +58,10 @@ method transliterate-context-aware(Str $text --> Str) {
         # Context-dependent rules for word-initial positions
         if self!is-word-initial($i, @chars) {
             given $lower {
-                when 'є' { $result ~= self!preserve-case($char, 'ye'); $found = True; }
-                when 'й' { $result ~= self!preserve-case($char, 'y'); $found = True; }
-                when 'ю' { $result ~= self!preserve-case($char, 'yu'); $found = True; }
-                when 'я' { $result ~= self!preserve-case($char, 'ya'); $found = True; }
+                when 'є' { $result ~= self!preserve-case($char, 'ye', $i, @chars); $found = True; }
+                when 'й' { $result ~= self!preserve-case($char, 'y', $i, @chars); $found = True; }
+                when 'ю' { $result ~= self!preserve-case($char, 'yu', $i, @chars); $found = True; }
+                when 'я' { $result ~= self!preserve-case($char, 'ya', $i, @chars); $found = True; }
             }
         }
         # Special handling for surname endings
@@ -73,7 +73,7 @@ method transliterate-context-aware(Str $text --> Str) {
         
         unless $found {
             if %base-mappings{$lower}:exists {
-                $result ~= self!preserve-case($char, %base-mappings{$lower});
+                $result ~= self!preserve-case($char, %base-mappings{$lower}, $i, @chars);
             } else {
                 $result ~= $char;
             }
@@ -89,8 +89,31 @@ method !is-word-initial(Int $pos, @chars --> Bool) {
     return $pos == 0 || (@chars[$pos - 1] ~~ /\s/ || @chars[$pos - 1] ~~ /\W/);
 }
 
-method !preserve-case(Str $original, Str $replacement --> Str) {
-    return $original ~~ /<:Lu>/ ?? $replacement.tc !! $replacement;
+method !preserve-case(Str $original, Str $replacement, Int $pos, @chars --> Str) {
+    # If original is not uppercase, return as-is
+    return $replacement unless $original ~~ /<:Lu>/;
+    
+    # For multi-character replacements, check if we're in all-caps context
+    if $replacement.chars > 1 {
+        my $all-caps = False;
+        
+        # Check surrounding context
+        if $pos > 0 && $pos + 1 < @chars.elems {
+            # Middle of word: check both neighbors
+            $all-caps = @chars[$pos - 1] ~~ /<:Lu>/ && @chars[$pos + 1] ~~ /<:Lu>/;
+        } elsif $pos == 0 && $pos + 1 < @chars.elems {
+            # Start of word: check next char
+            $all-caps = @chars[$pos + 1] ~~ /<:Lu>/;
+        } elsif $pos + 1 == @chars.elems && $pos > 0 {
+            # End of word: check previous char
+            $all-caps = @chars[$pos - 1] ~~ /<:Lu>/;
+        }
+        
+        return $all-caps ?? $replacement.uc !! $replacement.tc;
+    }
+    
+    # Single character replacement
+    return $replacement.uc;
 }
 
 method get-reverse-mappings(--> List) {

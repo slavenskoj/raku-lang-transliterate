@@ -1,0 +1,12 @@
+Revision history for Lang::Transliterate
+
+{{$NEXT}}
+
+0.1.0  June 2025
+    - Initial release
+    - Support for 130+ transliteration systems across 20+ languages
+    - Bidirectional conversion (transliterate and detransliterate)
+    - Context-aware transliteration with proper case preservation
+    - Support for ancient scripts including Egyptian hieroglyphics, Imperial Aramaic, and Paleo-Hebrew
+    - Full Unicode support with proper handling of combining characters
+    - Extensible architecture for adding new transliteration systems

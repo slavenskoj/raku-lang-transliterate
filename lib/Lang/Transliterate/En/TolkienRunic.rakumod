@@ -194,7 +194,7 @@ method transliterate-context-aware(Str $text, :%mappings = self.get-mappings() -
         unless $found {
             # Handle individual character
             my $char = @chars[$i];
-            if $char ~~ /<[a..z]>/ && %mappings{$char}:exists {
+            if $char ~~ /<[a..z]>/ && %mappings{$char} {
                 $result ~= %mappings{$char};
             } elsif $char ~~ /\s/ {
                 $result ~= %mappings<{ }> // "\c[0x16EB]";

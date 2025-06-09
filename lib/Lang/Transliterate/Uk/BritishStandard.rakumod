@@ -57,16 +57,16 @@ method transliterate-context-aware(Str $text --> Str) {
         
         # Special handling for тс sequence (t-s, not ts)
         if $lower eq 'т' && $i + 1 < @chars.elems && @chars[$i + 1].lc eq 'с' {
-            $result ~= self!preserve-case($char, 't');
+            $result ~= self!preserve-case($char, 't', $i, @chars);
             $result ~= '-';
-            $result ~= self!preserve-case(@chars[$i + 1], 's');
+            $result ~= self!preserve-case(@chars[$i + 1], 's', $i, @chars);
             $i += 2;
             $found = True;
         }
         
         unless $found {
             if %base-mappings{$lower}:exists {
-                $result ~= self!preserve-case($char, %base-mappings{$lower});
+                $result ~= self!preserve-case($char, %base-mappings{$lower}, $i, @chars);
             } else {
                 $result ~= $char;
             }
@@ -78,8 +78,31 @@ method transliterate-context-aware(Str $text --> Str) {
     return $result;
 }
 
-method !preserve-case(Str $original, Str $replacement --> Str) {
-    return $original ~~ /<:Lu>/ ?? $replacement.tc !! $replacement;
+method !preserve-case(Str $original, Str $replacement, Int $pos, @chars --> Str) {
+    # If original is not uppercase, return as-is
+    return $replacement unless $original ~~ /<:Lu>/;
+    
+    # For multi-character replacements, check if we're in all-caps context
+    if $replacement.chars > 1 {
+        my $all-caps = False;
+        
+        # Check surrounding context
+        if $pos > 0 && $pos + 1 < @chars.elems {
+            # Middle of word: check both neighbors
+            $all-caps = @chars[$pos - 1] ~~ /<:Lu>/ && @chars[$pos + 1] ~~ /<:Lu>/;
+        } elsif $pos == 0 && $pos + 1 < @chars.elems {
+            # Start of word: check next char
+            $all-caps = @chars[$pos + 1] ~~ /<:Lu>/;
+        } elsif $pos + 1 == @chars.elems && $pos > 0 {
+            # End of word: check previous char
+            $all-caps = @chars[$pos - 1] ~~ /<:Lu>/;
+        }
+        
+        return $all-caps ?? $replacement.uc !! $replacement.tc;
+    }
+    
+    # Single character replacement
+    return $replacement.uc;
 }
 
 method get-reverse-mappings(--> List) {

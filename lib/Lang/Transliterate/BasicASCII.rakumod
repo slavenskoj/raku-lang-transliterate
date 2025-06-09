@@ -63,10 +63,10 @@ my %fallback-mappings = (
     '»' => '"',
     '‹' => "'",
     '›' => "'",
-    '"' => '"',
-    '"' => '"',
-    ''' => "'",
-    ''' => "'",
+    "\x[201C]" => '"',  # Left double quotation mark
+    "\x[201D]" => '"',  # Right double quotation mark
+    "\x[2018]" => "'",  # Left single quotation mark
+    "\x[2019]" => "'",  # Right single quotation mark
     '–' => '-',
     '—' => '--',
     '…' => '...',
@@ -115,7 +115,7 @@ method transliterate(Str $text --> Str) {
         
         # Check for Persian characters that may not be covered by Arabic ISO 233
         # Persian-specific characters: پ چ ژ گ ک (and Persian digits)
-        if $working-text ~~ /[\c[0x067E]|\c[0x0686]|\c[0x0698]|\c[0x06AF]|\c[0x06A9]|\c[0x06F0..0x06F9]]/ {
+        if $working-text ~~ /[\c[0x067E]|\c[0x0686]|\c[0x0698]|\c[0x06AF]|\c[0x06A9]|<[\x[06F0]..\x[06F9]]>]/ {
             # Contains Persian-specific characters - use UN transliteration
             my $persian-un = Lang::Transliterate::Fa::UN.new;
             $working-text = $persian-un.transliterate($working-text);

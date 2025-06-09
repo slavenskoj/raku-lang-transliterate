@@ -58,11 +58,31 @@ method !is-vowel(Str $char --> Bool) {
     return so $char ~~ /<[аеёиоуыэюяaeiouy]>/;
 }
 
-method !preserve-case(Str $original, Str $replacement --> Str) {
-    if $original ~~ /<:Lu>/ {
-        return $replacement.tc;
+method !preserve-case(Str $original, Str $replacement, Int $pos, @chars --> Str) {
+    # If original is not uppercase, return as-is
+    return $replacement unless $original ~~ /<:Lu>/;
+    
+    # For multi-character replacements, check if we're in all-caps context
+    if $replacement.chars > 1 {
+        my $all-caps = False;
+        
+        # Check surrounding context
+        if $pos > 0 && $pos + 1 < @chars.elems {
+            # Middle of word: check both neighbors
+            $all-caps = @chars[$pos - 1] ~~ /<:Lu>/ && @chars[$pos + 1] ~~ /<:Lu>/;
+        } elsif $pos == 0 && $pos + 1 < @chars.elems {
+            # Start of word: check next char
+            $all-caps = @chars[$pos + 1] ~~ /<:Lu>/;
+        } elsif $pos + 1 == @chars.elems && $pos > 0 {
+            # End of word: check previous char
+            $all-caps = @chars[$pos - 1] ~~ /<:Lu>/;
+        }
+        
+        return $all-caps ?? $replacement.uc !! $replacement.tc;
     }
-    return $replacement;
+    
+    # Single character replacement
+    return $replacement.uc;
 }
 
 method transliterate-context-aware(Str $text --> Str) {
@@ -81,16 +101,16 @@ method transliterate-context-aware(Str $text --> Str) {
                 when 'е' {
                     # е → ye at word start or after vowels, otherwise e
                     if $i == 0 || ($i > 0 && self!is-vowel(@chars[$i - 1].lc)) {
-                        $result ~= self!preserve-case($char, 'ye');
+                        $result ~= self!preserve-case($char, 'ye', $i, @chars);
                     } else {
-                        $result ~= self!preserve-case($char, 'e');
+                        $result ~= self!preserve-case($char, 'e', $i, @chars);
                     }
                 }
                 when 'ъ' {
                     # ъ generally omitted, but ъе → ye
                     if $i + 1 < $length && @chars[$i + 1].lc eq 'е' {
                         # Handle ъе as ye combination
-                        $result ~= self!preserve-case(@chars[$i + 1], 'ye');
+                        $result ~= self!preserve-case(@chars[$i + 1], 'ye', $i + 1, @chars);
                         $i++; # Skip the е since we handled it
                     }
                     # Otherwise ъ is omitted (empty string from mapping)
@@ -99,20 +119,20 @@ method transliterate-context-aware(Str $text --> Str) {
                     # Check for -ый ending: ый → iy
                     if $i + 1 < $length && @chars[$i + 1].lc eq 'й' {
                         # This is -ый ending, handle as -iy
-                        $result ~= self!preserve-case($char, 'i');
+                        $result ~= self!preserve-case($char, 'i', $i, @chars);
                         # Skip the next й, we'll handle it here
                         $i++;
-                        $result ~= self!preserve-case(@chars[$i], 'y');
+                        $result ~= self!preserve-case(@chars[$i], 'y', $i, @chars);
                     } else {
                         # Regular ы → y
-                        $result ~= self!preserve-case($char, 'y');
+                        $result ~= self!preserve-case($char, 'y', $i, @chars);
                     }
                 }
                 default {
                     # Apply regular mapping
                     my $mapping = %base-mappings{$lower};
                     if $mapping ne '' {
-                        $result ~= self!preserve-case($char, $mapping);
+                        $result ~= self!preserve-case($char, $mapping, $i, @chars);
                     }
                     # If mapping is empty string (ъ, ь), nothing is added
                 }

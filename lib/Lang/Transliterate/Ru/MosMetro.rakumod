@@ -54,11 +54,31 @@ method get-mappings(--> Hash) {
     return %base-mappings;
 }
 
-method !preserve-case(Str $original, Str $replacement --> Str) {
-    if $original ~~ /<:Lu>/ {
-        return $replacement.tc;
+method !preserve-case(Str $original, Str $replacement, Int $pos, @chars --> Str) {
+    # If original is not uppercase, return as-is
+    return $replacement unless $original ~~ /<:Lu>/;
+    
+    # For multi-character replacements, check if we're in all-caps context
+    if $replacement.chars > 1 {
+        my $all-caps = False;
+        
+        # Check surrounding context
+        if $pos > 0 && $pos + 1 < @chars.elems {
+            # Middle of word: check both neighbors
+            $all-caps = @chars[$pos - 1] ~~ /<:Lu>/ && @chars[$pos + 1] ~~ /<:Lu>/;
+        } elsif $pos == 0 && $pos + 1 < @chars.elems {
+            # Start of word: check next char
+            $all-caps = @chars[$pos + 1] ~~ /<:Lu>/;
+        } elsif $pos + 1 == @chars.elems && $pos > 0 {
+            # End of word: check previous char
+            $all-caps = @chars[$pos - 1] ~~ /<:Lu>/;
+        }
+        
+        return $all-caps ?? $replacement.uc !! $replacement.tc;
     }
-    return $replacement;
+    
+    # Single character replacement
+    return $replacement.uc;
 }
 
 method !is-vowel-for-signs(Str $char --> Bool) {
@@ -82,17 +102,17 @@ method transliterate-context-aware(Str $text --> Str) {
                 when 'ё' {
                     # ё → yo after ъ and ь, otherwise e
                     if $i > 0 && @chars[$i - 1].lc ~~ any(<ъ ь>) {
-                        $result ~= self!preserve-case($char, 'yo');
+                        $result ~= self!preserve-case($char, 'yo', $i, @chars);
                     } else {
-                        $result ~= self!preserve-case($char, 'e');
+                        $result ~= self!preserve-case($char, 'e', $i, @chars);
                     }
                 }
                 when 'ц' {
                     # ц → s after т, otherwise ts
                     if $i > 0 && @chars[$i - 1].lc eq 'т' {
-                        $result ~= self!preserve-case($char, 's');
+                        $result ~= self!preserve-case($char, 's', $i, @chars);
                     } else {
-                        $result ~= self!preserve-case($char, 'ts');
+                        $result ~= self!preserve-case($char, 'ts', $i, @chars);
                     }
                 }
                 when 'ъ' {
@@ -113,33 +133,33 @@ method transliterate-context-aware(Str $text --> Str) {
                     # Check for -ый and -ий endings: both → -y
                     if $i + 1 < $length && @chars[$i + 1].lc eq 'й' {
                         # This is -ый ending, becomes -y
-                        $result ~= self!preserve-case($char, 'y');
+                        $result ~= self!preserve-case($char, 'y', $i, @chars);
                         # Skip the next й, we handle it here as part of ending
                         $i++;
                         # Don't add anything more - the ending is just 'y'
                     } else {
                         # Regular ы → y
-                        $result ~= self!preserve-case($char, 'y');
+                        $result ~= self!preserve-case($char, 'y', $i, @chars);
                     }
                 }
                 when 'и' {
                     # Check for -ий ending: ий → -y
                     if $i + 1 < $length && @chars[$i + 1].lc eq 'й' {
                         # This is -ий ending, becomes -y
-                        $result ~= self!preserve-case($char, 'y');
+                        $result ~= self!preserve-case($char, 'y', $i, @chars);
                         # Skip the next й
                         $i++;
                         # Don't add anything more - the ending is just 'y'
                     } else {
                         # Regular и → i
-                        $result ~= self!preserve-case($char, 'i');
+                        $result ~= self!preserve-case($char, 'i', $i, @chars);
                     }
                 }
                 default {
                     # Apply regular mapping
                     my $mapping = %base-mappings{$lower};
                     if $mapping ne '' {
-                        $result ~= self!preserve-case($char, $mapping);
+                        $result ~= self!preserve-case($char, $mapping, $i, @chars);
                     }
                     # If mapping is empty string (ъ, ь in other contexts), nothing is added
                 }
