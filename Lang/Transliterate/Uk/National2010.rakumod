@@ -88,7 +88,7 @@ method transliterate-context-aware(Str $text --> Str) {
 }
 
 method !is-word-initial(Int $pos, @chars --> Bool) {
-    return $pos == 0 || (@chars[$pos - 1] ~~ /\s/ || @chars[$pos - 1] ~~ /\W/);
+    return $pos == 0 || ?(@chars[$pos - 1] ~~ /\s/ || @chars[$pos - 1] ~~ /\W/);
 }
 
 method !preserve-case(Str $original, Str $replacement --> Str) {

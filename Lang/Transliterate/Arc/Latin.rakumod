@@ -1,6 +1,6 @@
 use Lang::Transliterate;
 
-unit class Lang::Transliterate::Arc::ImperialAramaicToLatin does Lang::Transliterate::Transliterator;
+unit class Lang::Transliterate::Arc::Latin does Lang::Transliterate::Transliterator;
 
 # Imperial Aramaic to Latin Transliteration
 # Based on the phonemic values from the Wikipedia table

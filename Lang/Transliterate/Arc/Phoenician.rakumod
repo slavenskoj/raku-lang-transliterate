@@ -1,6 +1,6 @@
 use Lang::Transliterate;
 
-unit class Lang::Transliterate::Arc::ImperialAramaicToPhoenician does Lang::Transliterate::Transliterator;
+unit class Lang::Transliterate::Arc::Phoenician does Lang::Transliterate::Transliterator;
 
 # Imperial Aramaic to Phoenician Script Conversion
 # Based on the Wikipedia table - both scripts share the same Northwest Semitic origin

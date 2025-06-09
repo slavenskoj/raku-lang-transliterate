@@ -28,18 +28,18 @@ my %base-mappings = (
     'у' => 'u',
     'ф' => 'f',
     'х' => 'kh',
-    'ц' => 't͡s',  # t with combining double breve below
+    'ц' => 't͡s',  # t-s ligature (with combining double inverted breve U+0361)
     'ч' => 'ch',
     'ш' => 'sh',
     'щ' => 'sht',
     'ъ' => 'ŭ',   # ʺ in final position (pre-1945 texts)
     'ь' => 'ʹ',   # U+02B9 MODIFIER LETTER PRIME
-    'ю' => 'i͡u',  # i with combining double breve below + u
-    'я' => 'i͡a',  # i with combining double breve below + a
+    'ю' => 'i͡u',  # i-u ligature (with combining double inverted breve U+0361)
+    'я' => 'i͡a',  # i-a ligature (with combining double inverted breve U+0361)
     
     # Archaic letters
     'ѫ' => 'u̐',   # u with combining candrabindu
-    'ѣ' => 'i͡e',  # i with combining double breve below + e
+    'ѣ' => 'i͡e',  # i-e ligature (with combining double inverted breve U+0361)
 );
 
 method get-mappings(--> Hash) {

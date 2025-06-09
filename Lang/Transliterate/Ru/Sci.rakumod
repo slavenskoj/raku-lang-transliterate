@@ -9,7 +9,7 @@ my %base-mappings = (
     'а' => 'a',
     'б' => 'b',
     'в' => 'v',
-    'г' => 'h',
+    'г' => 'g',
     'д' => 'd',
     'е' => 'e',
     'ё' => 'ë',
@@ -48,12 +48,12 @@ my %base-mappings = (
     
     # Pre-18th century letters
     'є' => 'ê',     # Ukrainian ye (Scholarly: "ê (j)e")
-    'ѥ' => 'ẹ',     # iotated e
-    'ѕ' => 'dz',     # zelo (Scholarly: "dz (ʒ)")
+    'ѥ' => 'je',     # iotated e
+    'ѕ' => 'ʒ',     # zelo (Scholarly: "ʒ (dz)")
     'ѧ' => 'ę',      # little yus (Scholarly: "ę (ja)")
     'ѩ' => 'ję',     # iotated little yus (Scholarly: "ję (ja)")
-    'ѫ' => 'ą',      # big yus (Scholarly: "ą (u)")
-    'ѭ' => 'ją',     # iotated big yus (Scholarly: "ją (ju)")
+    'ѫ' => 'ǫ',      # big yus (Scholarly: "ǫ (u)")
+    'ѭ' => 'jǫ',     # iotated big yus (Scholarly: "jǫ (ju)")
     'ѯ' => 'ks',      # ksi
     'ѱ' => 'ps',     # psi
     'ѡ' => 'ô',      # omega (Scholarly: "ô (o)")
@@ -73,7 +73,7 @@ method get-reverse-mappings(--> List) {
         'a' => 'а',
         'b' => 'б',
         'v' => 'в',
-        'h' => 'г',
+        'g' => 'г',
         'd' => 'д',
         'e' => 'е',
         'ë' => 'ё',
@@ -109,17 +109,17 @@ method get-reverse-mappings(--> List) {
         
         # Alternative forms for pre-18th century letters
         'ê' => 'є',
-#        'je' => 'є',      # Alternative: (j)e
-        'ẹ' => 'ѥ',
-        'dz' => 'ѕ',
-        'ʒ' => 'ѕ',      # Alternative form
+#        'je' => 'ѥ',
+        'ʒ' => 'ѕ',
+#        'dz' => 'ѕ',      # Alternative form
         'ę' => 'ѧ',
 #        'ja' => 'ѧ',      # Alternative: (ja) - note: conflict with я
         'ję' => 'ѩ',
-        'ją' => 'ѭ',
-        'ą' => 'ѫ',
+        'jǫ' => 'ѭ',
+        'ǫ' => 'ѫ',
 #        'u' => 'ѫ',       # Alternative: (u) - note: conflict with у
 #        'ju' => 'ѭ',      # Alternative: (ju) - note: conflict with ю
+#        'ks' => 'ѯ',
 #        'ps' => 'ѱ',
         'ô' => 'ѡ',
 #        'o' => 'ѡ',       # Alternative: (o) - note: conflict with о

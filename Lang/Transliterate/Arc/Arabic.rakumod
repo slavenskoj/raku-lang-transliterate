@@ -1,6 +1,6 @@
 use Lang::Transliterate;
 
-unit class Lang::Transliterate::Arc::ImperialAramaicToArabic does Lang::Transliterate::Transliterator;
+unit class Lang::Transliterate::Arc::Arabic does Lang::Transliterate::Transliterator;
 
 # Imperial Aramaic to Arabic Script Conversion
 # Based on the Wikipedia table of Imperial Aramaic letters

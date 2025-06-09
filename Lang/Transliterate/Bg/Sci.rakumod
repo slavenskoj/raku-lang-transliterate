@@ -37,7 +37,7 @@ my %base-mappings = (
     'я' => 'ja',
     
     # Archaic letters
-    'ѫ' => 'ȧ',  # Big yus
+    'ѫ' => 'ă',  # Big yus
     'ѣ' => 'ě',  # Yat
 );
 
@@ -79,7 +79,7 @@ method get-reverse-mappings(--> List) {
         'št' => 'щ',
         'ǎ' => 'ъ',
         'j' => 'ь',
-        'ȧ' => 'ѫ',
+        'ă' => 'ѫ',
         'ě' => 'ѣ',
         'ju' => 'ю',
         'ja' => 'я',
