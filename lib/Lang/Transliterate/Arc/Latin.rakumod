@@ -1,4 +1,4 @@
-use Lang::Transliterate;
+use Lang::Transliterate :ALL;
 
 unit class Lang::Transliterate::Arc::Latin does Lang::Transliterate::Transliterator;
 
@@ -40,6 +40,7 @@ method get-reverse-mappings(--> List) {
         'ʾ' => "\c[0x10840]",   # Aleph
         "'" => "\c[0x10840]",   # Alternative for aleph
         'b' => "\c[0x10841]",   # Beth
+        'c' => "\c[0x10842]",   # Latin c typically represents hard g (gimel)
         'g' => "\c[0x10842]",   # Gamal
         'd' => "\c[0x10843]",   # Dalath
         'h' => "\c[0x10844]",   # He
@@ -70,10 +71,13 @@ method get-reverse-mappings(--> List) {
 }
 
 # Latin uses vowels as separate letters, so we need to strip them when converting back
-method detransliterate-context-aware(Str $text, :%reverse-mappings = self.get-reverse-mappings().Hash --> Str) {
+method detransliterate-context-aware(Str $text --> Str) {
     # First, strip all Latin vowels (a, e, i, o, u and their variants)
     my $consonantal = $text.subst(/:i <[aeiouāēīōūăĕĭŏŭàèìòùáéíóúâêîôûäëïöüæœ]>/, '', :g);
     
-    # Then apply the standard detransliteration
-    return self.detransliterate($consonantal, :%reverse-mappings);
+    # Then apply the reverse mappings
+    my @mappings = self.get-reverse-mappings();
+    my %reverse-map = @mappings;
+    
+    return apply-mapping($consonantal, %reverse-map);
 }

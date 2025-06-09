@@ -50,7 +50,7 @@ sub apply-mapping(Str $text, %mappings --> Str) is export(:ALL) {
                         } elsif $i + $len == @chars.elems && $i > 0 {
                             $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/;
                         }
-                        $result ~= $apply-full-upper ?? $mapped.uc !! $mapped;
+                        $result ~= $apply-full-upper ?? $mapped.uc !! $mapped.tc;
                     } else {
                         $result ~= $mapped;
                     }

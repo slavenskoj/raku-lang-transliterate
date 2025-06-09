@@ -1,4 +1,4 @@
-use Lang::Transliterate;
+use Lang::Transliterate :ALL;
 
 unit class Lang::Transliterate::Arc::Arabic does Lang::Transliterate::Transliterator;
 
@@ -71,26 +71,17 @@ method get-reverse-mappings(--> List) {
 
 # Override reverse transliteration to strip Arabic vowel marks (harakat)
 method detransliterate-context-aware(Str $text --> Str) {
-    # First strip all Arabic vowel marks and diacritics
+    # First strip all Arabic vowel marks and diacritics at the code point level
     # Arabic diacritics: U+064B-U+065F, U+0670
-    my $stripped = $text.subst(/<[\x[064B]..\x[065F] \x[0670]]>/, '', :g);
+    my @codes = $text.ords;
+    my @filtered = @codes.grep({ not (0x064B <= $_ <= 0x065F or $_ == 0x0670) });
+    my $stripped = @filtered».chr.join;
     
     # Then apply the reverse mappings
     my @mappings = self.get-reverse-mappings();
     my %reverse-map = @mappings;
     
-    my $result = '';
-    my @chars = $stripped.comb;
-    
-    for @chars -> $char {
-        if %reverse-map{$char}:exists {
-            $result ~= %reverse-map{$char};
-        } else {
-            $result ~= $char;
-        }
-    }
-    
-    return $result;
+    return apply-mapping($stripped, %reverse-map);
 }
 
 # Arabic requires special handling for contextual forms

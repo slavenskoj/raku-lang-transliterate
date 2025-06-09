@@ -111,6 +111,20 @@ my %base-mappings = (
     'ϙ' => 'q',
     'Ϡ' => 'Ss',     # Sampi
     'ϡ' => 'ss',
+    
+    # Special gamma combinations
+    'γγ' => 'ng',    # gamma before gamma
+    'Γγ' => 'Ng',
+    'ΓΓ' => 'NG',
+    'γκ' => 'gk',    # gamma before kappa
+    'Γκ' => 'Gk',
+    'ΓΚ' => 'GK',
+    'γξ' => 'nx',    # gamma before xi
+    'Γξ' => 'Nx',
+    'ΓΞ' => 'NX',
+    'γχ' => 'nch',   # gamma before chi
+    'Γχ' => 'Nch',
+    'ΓΧ' => 'NCH',
 );
 
 method get-mappings(--> Hash) {
@@ -120,7 +134,11 @@ method get-mappings(--> Hash) {
 method get-reverse-mappings(--> List) {
     # Greek ISO 843 reverse mappings
     return (
-        # Multi-character mappings first
+        # Multi-character mappings first (longest first)
+        'nch' => 'γχ',
+        'Nch' => 'Γχ',
+        'NCH' => 'ΓΧ',
+        
         'au' => 'αυ',
         'Au' => 'Αυ',
         'AU' => 'ΑΥ',
@@ -147,6 +165,17 @@ method get-reverse-mappings(--> List) {
         'PS' => 'Ψ',
         'ss' => 'ϡ',
         'Ss' => 'Ϡ',
+        
+        # Special gamma combinations
+        'ng' => 'γγ',
+        'Ng' => 'Γγ',
+        'NG' => 'ΓΓ',
+        'gk' => 'γκ',
+        'Gk' => 'Γκ',
+        'GK' => 'ΓΚ',
+        'nx' => 'γξ',
+        'Nx' => 'Γξ',
+        'NX' => 'ΓΞ',
         
         # Letters with diacritics
         'Á' => 'Ά',

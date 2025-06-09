@@ -99,7 +99,7 @@ method get-reverse-mappings(--> List) {
         # Multi-character mappings first
         'ch' => "\c[0x05D7]",    # maps to ח (could also be כ)
         'kh' => "\c[0x05D7]",    # alternate for ח
-        'sh' => "\c[0x05E9]\c[0x05C1]",  # שׁ
+        'sh' => "\c[0x05E9]",  # ש (plain shin, common usage)
         'tz' => "\c[0x05E6]",    # צ
         'ts' => "\c[0x05E6]",    # alternate for צ
         'tsh' => "\c[0x05E6]\c[0x05F3]", # צ׳

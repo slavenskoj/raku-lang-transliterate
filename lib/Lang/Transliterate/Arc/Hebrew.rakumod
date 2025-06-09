@@ -1,4 +1,4 @@
-use Lang::Transliterate;
+use Lang::Transliterate :ALL;
 
 unit class Lang::Transliterate::Arc::Hebrew does Lang::Transliterate::Transliterator;
 
@@ -111,24 +111,15 @@ method transliterate-context-aware(Str $text, :%mappings = self.get-mappings() -
 
 # Override reverse transliteration to strip Hebrew vowel marks (niqqud)
 method detransliterate-context-aware(Str $text --> Str) {
-    # First strip all Hebrew vowel marks and cantillation marks
+    # First strip all Hebrew vowel marks and cantillation marks at the code point level
     # Hebrew points: U+0591-U+05C7, U+05F0-U+05F4
-    my $stripped = $text.subst(/<[\x[0591]..\x[05C7] \x[05F0]..\x[05F4]]>/, '', :g);
+    my @codes = $text.ords;
+    my @filtered = @codes.grep({ not (0x0591 <= $_ <= 0x05C7 or 0x05F0 <= $_ <= 0x05F4) });
+    my $stripped = @filtered».chr.join;
     
     # Then apply the reverse mappings
     my @mappings = self.get-reverse-mappings();
     my %reverse-map = @mappings;
     
-    my $result = '';
-    my @chars = $stripped.comb;
-    
-    for @chars -> $char {
-        if %reverse-map{$char}:exists {
-            $result ~= %reverse-map{$char};
-        } else {
-            $result ~= $char;
-        }
-    }
-    
-    return $result;
+    return apply-mapping($stripped, %reverse-map);
 }

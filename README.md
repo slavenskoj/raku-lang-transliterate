@@ -7,17 +7,10 @@ A comprehensive Raku library for transliterating text between different writing 
 **Lang::Transliterate** provides context-aware transliteration with several advanced features:
 
 - **Context-Aware Transliteration**: The library intelligently handles character combinations and contextual rules.
-
 - **Bidirectional Conversion**: Most transliteration schemes support both forward transliteration (native script to Latin or other script) and reverse transliteration, allowing round-trip conversions.
-
 - **Case Preservation**: The library automatically preserves the case of the original text when necessary, intelligently handling multi-character mappings.
-
-- **Multiple Standards**: Choose from various transliteration standards based on your needs. Covers most standards you'd want to use, and a few you don't.
-
 - **Ancient and Historical Scripts**: Support for ancient writing systems including Egyptian hieroglyphics, Imperial Aramaic, Paleo-Hebrew, and Church Slavonic, with multiple scholarly transliteration standards.
-
 - **Klingon and Tolkien Runic:** Just getting started now.
-
 - **Extensible Architecture**: All transliterators implement a common interface, making it easy to add new scripts or customize existing ones. The modular design allows for language-specific rules and exceptions.
 
 ## Available Transliteration Systems
@@ -242,7 +235,7 @@ A comprehensive Raku library for transliterating text between different writing 
 | `Lang::Transliterate::Uk::BritishStandard` | British Standard romanization |
 | `Lang::Transliterate::Uk::Derzhstandart1995` | Ukrainian national standard 1995 |
 | `Lang::Transliterate::Uk::GOST1971` | Soviet GOST 16876-71 |
-| `Lang::Transliterate::Uk::GOST1986` | Late Soviet standard |
+| `Lang::Transliterate::Uk::GOST1986` | Soviet GOST standard 1986 |
 | `Lang::Transliterate::Uk::ISO1954` | Early ISO standard 1954 |
 | `Lang::Transliterate::Uk::ISO1968Basic` | ISO basic system 1968 |
 | `Lang::Transliterate::Uk::ISO1968Ukrainian` | ISO Ukrainian-specific system 1968 |
