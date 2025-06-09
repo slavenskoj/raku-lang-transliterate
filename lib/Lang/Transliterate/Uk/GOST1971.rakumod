@@ -1,21 +1,21 @@
-use Lang::Transliterate;
+use Lang::Transliterate :ALL;
 
-unit class Lang::Transliterate::Uk::Sci does Lang::Transliterate::Transliterator;
+unit class Lang::Transliterate::Uk::GOST1971 does Lang::Transliterate::Transliterator;
 
-# Ukrainian Scientific Transliteration
+# Ukrainian GOST 1971
+# From Wikipedia comparison table
 my %base-mappings = (
-    # Ukrainian Cyrillic to Latin Scientific
     'а' => 'a',
     'б' => 'b',
     'в' => 'v',
-    'г' => 'h',
-    'ґ' => 'g',
+    'г' => 'g',
+    'ґ' => '',       # Not defined in GOST 1971
     'д' => 'd',
     'е' => 'e',
     'є' => 'je',
-    'ж' => 'ž',
+    'ж' => 'zh',
     'з' => 'z',
-    'и' => 'y',
+    'и' => 'i',
     'і' => 'i',
     'ї' => 'ji',
     'й' => 'j',
@@ -30,40 +30,47 @@ my %base-mappings = (
     'т' => 't',
     'у' => 'u',
     'ф' => 'f',
-    'х' => 'x',
+    'х' => 'kh',
     'ц' => 'c',
-    'ч' => 'č',
-    'ш' => 'š',
-    'щ' => 'šč',
-    'ь' => 'ʹ',
+    'ч' => 'ch',
+    'ш' => 'sh',
+    'щ' => 'shh',
+    'ь' => 'ʹ',      # Soft sign
     'ю' => 'ju',
     'я' => 'ja',
-    'ʼ' => 'ʼ',
+    "'" => '*',      # Apostrophe
 );
 
 method get-mappings(--> Hash) {
-    # Return only lowercase mappings
-    # The framework will handle capitalization
     return %base-mappings;
 }
 
 method get-reverse-mappings(--> List) {
-    # Scientific transliteration has some ambiguities
-    # This provides a best-effort reverse mapping
+    # Ukrainian GOST 1971 reverse mapping
     return (
+        # Multi-character mappings first
+        'zh' => 'ж',
+        'kh' => 'х',
+        'ch' => 'ч',
+        'sh' => 'ш',
+        'shh' => 'щ',
+        'je' => 'є',
+        'ji' => 'ї',
+        'ju' => 'ю',
+        'ja' => 'я',
+        # Special characters
+        'ʹ' => 'ь',
+        "'" => 'ь',  # ASCII apostrophe for soft sign
+        '*' => "'",
+        # Single mappings
         'a' => 'а',
         'b' => 'б',
         'v' => 'в',
-        'h' => 'г',
-        'g' => 'ґ',
+        'g' => 'г',
         'd' => 'д',
         'e' => 'е',
-        'je' => 'є',
-        'ž' => 'ж',
         'z' => 'з',
-        'y' => 'и',
-        'i' => 'і',
-        'ji' => 'ї',
+        'i' => 'и',  # Could also be і
         'j' => 'й',
         'k' => 'к',
         'l' => 'л',
@@ -76,15 +83,6 @@ method get-reverse-mappings(--> List) {
         't' => 'т',
         'u' => 'у',
         'f' => 'ф',
-        'x' => 'х',
         'c' => 'ц',
-        'č' => 'ч',
-        'š' => 'ш',
-        'šč' => 'щ',
-        'ʹ' => 'ь',
-        "'" => 'ь',  # ASCII apostrophe for soft sign
-        'ju' => 'ю',
-        'ja' => 'я',
-        'ʼ' => 'ʼ',
     );
 }

@@ -1,22 +1,23 @@
-use Lang::Transliterate;
+use Lang::Transliterate :ALL;
 
-unit class Lang::Transliterate::Be::ISO9 does Lang::Transliterate::Transliterator;
+unit class Lang::Transliterate::Uk::ISO1995 does Lang::Transliterate::Transliterator;
 
-# Belarusian ISO 9:1995 Transliteration
-# Also Belarusian state standard GOST 7.79–2000
+# Ukrainian ISO 9:1995 transliteration
+# From Wikipedia comparison table
 my %base-mappings = (
-    # Belarusian Cyrillic to Latin ISO 9:1995
     'а' => 'a',
     'б' => 'b',
     'в' => 'v',
     'г' => 'g',
-    'ґ' => 'g̀',  # g with combining grave accent
+    'ґ' => 'g̀',      # g with grave
     'д' => 'd',
     'е' => 'e',
-    'ё' => 'ë',
+    'є' => 'ê',
     'ж' => 'ž',
     'з' => 'z',
-    'і' => 'ì',  # i with grave accent
+    'и' => 'i',
+    'і' => 'ì',      # i with grave
+    'ї' => 'ï',
     'й' => 'j',
     'к' => 'k',
     'л' => 'l',
@@ -28,44 +29,41 @@ my %base-mappings = (
     'с' => 's',
     'т' => 't',
     'у' => 'u',
-    'ў' => 'ǔ',  # u with caron
     'ф' => 'f',
     'х' => 'h',
     'ц' => 'c',
     'ч' => 'č',
     'ш' => 'š',
-    'ы' => 'y',
-    'ь' => 'ʹ',  # U+02B9 MODIFIER LETTER PRIME
-    'э' => 'è',
+    'щ' => 'ŝ',
+    'ь' => 'ʹ',      # Soft sign
     'ю' => 'û',
     'я' => 'â',
-    'ʼ' => 'ʼ',  # apostrophe preserved
+    "'" => 'ˮ',      # Apostrophe
 );
 
 method get-mappings(--> Hash) {
-    # Return only lowercase mappings
-    # The framework will handle capitalization
     return %base-mappings;
 }
 
 method get-reverse-mappings(--> List) {
-    # ISO 9 is designed to be reversible
+    # Ukrainian ISO 9:1995 reverse mapping
     return (
-        # Diacritical marks
+        # Special characters with diacritics
         'g̀' => 'ґ',
-        'ì' => 'і',
-        'ë' => 'ё',
+        'ê' => 'є',
         'ž' => 'ж',
-        'ǔ' => 'ў',
+        'ì' => 'і',
+        'ï' => 'ї',
         'č' => 'ч',
         'š' => 'ш',
-        'è' => 'э',
+        'ŝ' => 'щ',
         'û' => 'ю',
         'â' => 'я',
         'ʹ' => 'ь',
-        "'" => 'ь',  # ASCII alternative for soft sign
-        
-        # Simple letters
+        "'" => 'ь',  # ASCII apostrophe for soft sign
+        'ˮ' => "'",
+        '"' => "'",  # ASCII quote for apostrophe
+        # Single mappings
         'a' => 'а',
         'b' => 'б',
         'v' => 'в',
@@ -73,6 +71,7 @@ method get-reverse-mappings(--> List) {
         'd' => 'д',
         'e' => 'е',
         'z' => 'з',
+        'i' => 'и',
         'j' => 'й',
         'k' => 'к',
         'l' => 'л',
@@ -87,7 +86,5 @@ method get-reverse-mappings(--> List) {
         'f' => 'ф',
         'h' => 'х',
         'c' => 'ц',
-        'y' => 'ы',
-        'ʼ' => 'ʼ',
     );
 }

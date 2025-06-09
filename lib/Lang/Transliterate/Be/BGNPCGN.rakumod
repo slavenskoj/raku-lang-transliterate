@@ -66,7 +66,9 @@ method get-reverse-mappings(--> List) {
         
         # Modifier letters
         'ʹ' => 'ь',
+        "'" => 'ь',  # ASCII alternative for soft sign
         'ʺ' => 'ʼ',
+        '"' => 'ʼ',  # ASCII alternative for apostrophe
         
         # Simple letters
         'a' => 'а',

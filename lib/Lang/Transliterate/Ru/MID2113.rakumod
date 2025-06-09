@@ -1,6 +1,6 @@
-use Lang::Transliterate;
+use Lang::Transliterate :ALL;
 
-unit class Lang::Transliterate::Ru::ForeignMinistry does Lang::Transliterate::Transliterator;
+unit class Lang::Transliterate::Ru::MID2113 does Lang::Transliterate::Transliterator;
 
 # Foreign Ministry system (Приказ МИД № 2113) Romanization for Russian
 # From Wikipedia comparison table
@@ -39,12 +39,6 @@ my %base-mappings = (
     'э' => 'e',
     'ю' => 'iu',
     'я' => 'ia',
-    
-    # Historic letters (pre-1918)
-    'і' => 'i',      # и десятеричное
-    'ѣ' => 'ie',     # ять
-    'ѳ' => 'f',      # фита
-    'ѵ' => 'i',      # ижица
 );
 
 method get-mappings(--> Hash) {
@@ -81,7 +75,7 @@ method get-reverse-mappings(--> List) {
         'ch' => 'ч',
         'sh' => 'ш',
         'shch' => 'щ',
-        'ie' => 'ъ',     # Could also be ѣ
+        'ie' => 'ъ',
         'y' => 'ы',
         'iu' => 'ю',
         'ia' => 'я',

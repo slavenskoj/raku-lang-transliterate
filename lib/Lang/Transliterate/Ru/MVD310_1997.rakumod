@@ -1,6 +1,6 @@
-use Lang::Transliterate;
+use Lang::Transliterate :ALL;
 
-unit class Lang::Transliterate::Ru::Passport1997 does Lang::Transliterate::Transliterator;
+unit class Lang::Transliterate::Ru::MVD310_1997 does Lang::Transliterate::Transliterator;
 
 # Passport system (Приказ МВД № 310, 1997—2010) Romanization for Russian
 # From Wikipedia comparison table

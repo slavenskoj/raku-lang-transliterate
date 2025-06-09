@@ -1,22 +1,22 @@
-use Lang::Transliterate;
+use Lang::Transliterate :ALL;
 
-unit class Lang::Transliterate::Ru::Passport2015 does Lang::Transliterate::Transliterator;
+unit class Lang::Transliterate::Ru::MVD782_2000 does Lang::Transliterate::Transliterator;
 
-# Driver's License system (Приказ МВД № 995, с 2015) Romanization for Russian
+# Driver's License system (Приказ МВД № 782, 2000—2015) Romanization for Russian
 # From Wikipedia comparison table
 my %base-mappings = (
-    # Russian Cyrillic to Latin Driver's License (с 2015)
+    # Russian Cyrillic to Latin Driver's License (2000-2015)
     'а' => 'a',
     'б' => 'b',
     'в' => 'v',
     'г' => 'g',
     'д' => 'd',
-    'е' => 'e',      # Note: 'ye' after Ь
-    'ё' => 'e',      # Note: 'ye' after Ь
+    'е' => 'e',      # Note: 'ye' at start of words and after vowels, Ь, Ъ
+    'ё' => 'e',      # Note: context-dependent - 'e' after Ч,Ш,Щ,Ж; 'yo' at start/after vowels; 'ye' after other consonants  
     'ж' => 'zh',
     'з' => 'z',
-    'и' => 'i',
-    'й' => 'i',      # Different from 2000 version
+    'и' => 'i',      # Note: 'yi' after Ь
+    'й' => 'y',
     'к' => 'k',
     'л' => 'l',
     'м' => 'm',
@@ -33,16 +33,16 @@ my %base-mappings = (
     'ч' => 'ch',
     'ш' => 'sh',
     'щ' => 'shch',
-    'ъ' => 'ie',     # Different from 2000 version
+    'ъ' => "'",      # Apostrophe
     'ы' => 'y',
-    'ь' => '',       # Not defined in standard
+    'ь' => "'",      # Apostrophe
     'э' => 'e',
-    'ю' => 'iu',     # Different from 2000 version
-    'я' => 'ia',     # Different from 2000 version
+    'ю' => 'yu',
+    'я' => 'ya',
     
     # Historic letters (pre-1918)
     'і' => 'i',      # и десятеричное
-    'ѣ' => 'ie',     # ять
+    'ѣ' => 'ye',     # ять
     'ѳ' => 'f',      # фита
     'ѵ' => 'i',      # ижица
 );
@@ -54,7 +54,7 @@ method get-mappings(--> Hash) {
 }
 
 method transliterate-context-aware(Str $text --> Str) {
-    # Override default to implement Driver's License (с 2015) context-dependent rules
+    # Override default to implement Driver's License (2000-2015) context-dependent rules
     my $result = '';
     my @chars = $text.comb;
     
@@ -64,11 +64,11 @@ method transliterate-context-aware(Str $text --> Str) {
         my $lower = $char.lc;
         my $found = False;
         
-        # Context-dependent rules for Driver's License (с 2015)
+        # Context-dependent rules for Driver's License (2000-2015)
         given $lower {
             when 'е' {
-                # 'ye' after Ь
-                if $i > 0 && @chars[$i - 1].lc eq 'ь' {
+                # 'ye' at start of words and after vowels, Ь, Ъ
+                if $i == 0 || self!is-vowel(@chars[$i - 1]) || @chars[$i - 1].lc ~~ any(<ь ъ>) {
                     $result ~= self!preserve-case($char, 'ye');
                 } else {
                     $result ~= self!preserve-case($char, 'e');
@@ -76,11 +76,24 @@ method transliterate-context-aware(Str $text --> Str) {
                 $found = True;
             }
             when 'ё' {
-                # 'ye' after Ь, otherwise 'e'
-                if $i > 0 && @chars[$i - 1].lc eq 'ь' {
-                    $result ~= self!preserve-case($char, 'ye');
-                } else {
+                my $prev-char = $i > 0 ?? @chars[$i - 1].lc !! '';
+                
+                # Context-dependent: 'e' after Ч,Ш,Щ,Ж; 'yo' at start/after vowels; 'ye' after other consonants
+                if $prev-char ~~ any(<ч ш щ ж>) {
                     $result ~= self!preserve-case($char, 'e');
+                } elsif $i == 0 || self!is-vowel(@chars[$i - 1]) || $prev-char ~~ any(<ь ъ>) {
+                    $result ~= self!preserve-case($char, 'yo');
+                } else {
+                    $result ~= self!preserve-case($char, 'ye');
+                }
+                $found = True;
+            }
+            when 'и' {
+                # 'yi' after Ь
+                if $i > 0 && @chars[$i - 1].lc eq 'ь' {
+                    $result ~= self!preserve-case($char, 'yi');
+                } else {
+                    $result ~= self!preserve-case($char, 'i');
                 }
                 $found = True;
             }
@@ -102,12 +115,17 @@ method transliterate-context-aware(Str $text --> Str) {
     return $result;
 }
 
+method !is-vowel(Str $char --> Bool) {
+    my $lower = $char.lc;
+    return $lower ~~ any(<а е ё и о у ы э ю я a e i o u>);
+}
+
 method !preserve-case(Str $original, Str $replacement --> Str) {
     return $original ~~ /<:Lu>/ ?? $replacement.tc !! $replacement;
 }
 
 method get-reverse-mappings(--> List) {
-    # Driver's License (с 2015) reverse mapping
+    # Driver's License (2000-2015) reverse mapping
     return (
         'a' => 'а',
         'b' => 'б',
@@ -115,10 +133,12 @@ method get-reverse-mappings(--> List) {
         'g' => 'г',
         'd' => 'д',
         'e' => 'е',      # Could also be ё, э
-        'ye' => 'е',     # Alternative after Ь
+        'ye' => 'е',     # Alternative form
         'zh' => 'ж',
         'z' => 'з',
-        'i' => 'и',      # Could also be й
+        'i' => 'и',
+        'yi' => 'и',     # Alternative after Ь
+        'y' => 'й',      # Could also be ы
         'k' => 'к',
         'l' => 'л',
         'm' => 'м',
@@ -135,9 +155,8 @@ method get-reverse-mappings(--> List) {
         'ch' => 'ч',
         'sh' => 'ш',
         'shch' => 'щ',
-        'ie' => 'ъ',     # Could also be ѣ
-        'y' => 'ы',
-        'iu' => 'ю',
-        'ia' => 'я',
+        "'" => 'ъ',      # Could also be ь
+        'yu' => 'ю',
+        'ya' => 'я',
     );
 }

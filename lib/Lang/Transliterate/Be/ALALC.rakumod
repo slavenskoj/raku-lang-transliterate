@@ -39,7 +39,7 @@ my %base-mappings = (
     'э' => 'ė',
     'ю' => 'i͡u',  # i with combining double breve + u
     'я' => 'i͡a',  # i with combining double breve + a
-    'ʼ' => '-',  # apostrophe (not shown in system)
+    'ʼ' => '',  # apostrophe (not shown in system)
     
     # Historical letters
     'и' => 'ī',
@@ -78,7 +78,9 @@ method get-reverse-mappings(--> List) {
         'ī' => 'и',
         'ě' => 'ѣ',
         'ʹ' => 'ь',
+        "'" => 'ь',  # ASCII alternative for soft sign
         'ʺ' => 'ъ',
+        '"' => 'ъ',  # ASCII alternative for hard sign
         
         # Simple letters
         'a' => 'а',

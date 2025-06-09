@@ -29,7 +29,24 @@ sub apply-mapping(Str $text, %mappings --> Str) is export(:ALL) {
                 
                 # First try exact match (handles pre-defined uppercase mappings)
                 if %mappings{$substr}:exists {
-                    $result ~= %mappings{$substr};
+                    my $mapped = %mappings{$substr};
+                    
+                    # Check if this is an uppercase character with multi-char mapping
+                    if $len == 1 && $substr ~~ /<:Lu>/ && $mapped.chars > 1 {
+                        # Check if we're in an all-caps context
+                        my $apply-full-upper = False;
+                        if $i > 0 && $i + $len < @chars.elems {
+                            $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/ && @chars[$i + $len] ~~ /<:Lu>/;
+                        } elsif $i == 0 && $i + $len < @chars.elems {
+                            $apply-full-upper = @chars[$i + $len] ~~ /<:Lu>/;
+                        } elsif $i + $len == @chars.elems && $i > 0 {
+                            $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/;
+                        }
+                        $result ~= $apply-full-upper ?? $mapped.uc !! $mapped;
+                    } else {
+                        $result ~= $mapped;
+                    }
+                    
                     $i += $len;
                     $found = True;
                     last;
@@ -43,13 +60,13 @@ sub apply-mapping(Str $text, %mappings --> Str) is export(:ALL) {
                         
                         # Check if we should apply full uppercase (look ahead)
                         my $apply-full-upper = False;
-                        if $i > 0 && $i + 1 < @chars.elems {
+                        if $i > 0 && $i + $len < @chars.elems {
                             # Check if previous and next chars are also uppercase
-                            $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/ && @chars[$i + 1] ~~ /<:Lu>/;
-                        } elsif $i == 0 && @chars.elems > 1 {
+                            $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/ && @chars[$i + $len] ~~ /<:Lu>/;
+                        } elsif $i == 0 && $i + $len < @chars.elems {
                             # At start, check if next char is uppercase
-                            $apply-full-upper = @chars[$i + 1] ~~ /<:Lu>/;
-                        } elsif $i == @chars.elems - 1 && $i > 0 {
+                            $apply-full-upper = @chars[$i + $len] ~~ /<:Lu>/;
+                        } elsif $i + $len == @chars.elems && $i > 0 {
                             # At end, check if previous char is uppercase
                             $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/;
                         }

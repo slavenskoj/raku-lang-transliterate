@@ -73,7 +73,9 @@ method get-reverse-mappings(--> List) {
         'é' => 'э',
         'ê' => 'ѣ',
         'ˮ' => 'ʼ',  # could also be ъ
+        '""' => 'ʼ',  # ASCII alternative for double apostrophe (two quotes)
         'ʼ' => 'ь',
+        "'" => 'ь',  # ASCII alternative for soft sign
         
         # Simple letters
         'a' => 'а',

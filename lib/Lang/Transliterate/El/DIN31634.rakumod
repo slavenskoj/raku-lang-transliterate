@@ -21,7 +21,7 @@ my %base-mappings = (
     'ζ' => 'z',
     'Η' => 'Ē',
     'η' => 'ē',
-    'Θ' => 'TH',
+    'Θ' => 'Th',
     'θ' => 'th',
     'Ι' => 'I',
     'ι' => 'i',
@@ -48,11 +48,11 @@ my %base-mappings = (
     'τ' => 't',
     'Υ' => 'Y',
     'υ' => 'y',
-    'Φ' => 'PH',
+    'Φ' => 'Ph',
     'φ' => 'ph',
-    'Χ' => 'CH',
+    'Χ' => 'Ch',
     'χ' => 'ch',
-    'Ψ' => 'PS',
+    'Ψ' => 'Ps',
     'ψ' => 'ps',
     'Ω' => 'Ō',
     'ω' => 'ō',
@@ -309,7 +309,24 @@ method !apply-din31634-context-mapping(Str $text, %mappings --> Str) {
                     
                     # First try exact match
                     if %mappings{$substr}:exists {
-                        $result ~= %mappings{$substr};
+                        my $mapped = %mappings{$substr};
+                        
+                        # Check if this is an uppercase character with multi-char mapping
+                        if $len == 1 && $substr ~~ /<:Lu>/ && $mapped.chars > 1 {
+                            # Check if we're in an all-caps context
+                            my $apply-full-upper = False;
+                            if $i > 0 && $i + $len < @chars.elems {
+                                $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/ && @chars[$i + $len] ~~ /<:Lu>/;
+                            } elsif $i == 0 && $i + $len < @chars.elems {
+                                $apply-full-upper = @chars[$i + $len] ~~ /<:Lu>/;
+                            } elsif $i + $len == @chars.elems && $i > 0 {
+                                $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/;
+                            }
+                            $result ~= $apply-full-upper ?? $mapped.uc !! $mapped;
+                        } else {
+                            $result ~= $mapped;
+                        }
+                        
                         $i += $len;
                         $found = True;
                         last;
@@ -324,11 +341,11 @@ method !apply-din31634-context-mapping(Str $text, %mappings --> Str) {
                             
                             # Apply intelligent capitalization like main module
                             my $apply-full-upper = False;
-                            if $i > 0 && $i + 1 < @chars.elems {
-                                $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/ && @chars[$i + 1] ~~ /<:Lu>/;
-                            } elsif $i == 0 && @chars.elems > 1 {
-                                $apply-full-upper = @chars[$i + 1] ~~ /<:Lu>/;
-                            } elsif $i == @chars.elems - 1 && $i > 0 {
+                            if $i > 0 && $i + $len < @chars.elems {
+                                $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/ && @chars[$i + $len] ~~ /<:Lu>/;
+                            } elsif $i == 0 && $i + $len < @chars.elems {
+                                $apply-full-upper = @chars[$i + $len] ~~ /<:Lu>/;
+                            } elsif $i + $len == @chars.elems && $i > 0 {
                                 $apply-full-upper = @chars[$i - 1] ~~ /<:Lu>/;
                             }
                             

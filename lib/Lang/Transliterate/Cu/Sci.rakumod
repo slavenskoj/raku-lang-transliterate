@@ -13,6 +13,7 @@ my %base-mappings = (
     'г' => 'g',
     'д' => 'd',
     'е' => 'e',      # Note: є also maps to 'e' in Church Slavonic
+    'э' => 'e',      # cannot be treated as a separate letter of the alphabet https://www.unicode.org/notes/tn41/tn41-1.pdf
     'ж' => 'ž',
     'з' => 'z',
     'и' => 'i',
@@ -76,7 +77,8 @@ my %base-mappings = (
     'ᲊ' => 't',      # Tje (U+1C8A)
     
     # Early letter forms
-    'ꙃ' => 'dz',     # Early form of zelo
+    'ꙃ' => 'ʒ',     # Early form of DZELO
+    'ꙅ' => 'ʒ',      # Reversed form of DZELO
     'ꙁ' => 'z',      # Early form of з
     'ѹ' => 'u',      # Deprecated uk ligature (U+0479)
     'Ѹ' => 'U',      # Deprecated uk ligature capital (U+0478)
@@ -242,7 +244,7 @@ method get-reverse-mappings(--> List) {
         'th' => 'ѳ',
         'št' => 'щ',
         'ot' => 'ѿ',
-        'dz' => 'ꙃ',     # Maps to early form of zelo
+        'dz' => 'ѕ',     # Alternative for ʒ
         'ch' => 'х',     # Alternative for х
         'ōt' => 'ѿ',     # Alternative for ot ligature
         'ph' => 'ѳ',     # Alternative for fita

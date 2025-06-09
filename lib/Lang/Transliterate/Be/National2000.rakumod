@@ -126,6 +126,7 @@ method get-reverse-mappings(--> List) {
         'č' => 'ч',
         'š' => 'ш',
         'ʹ' => 'ь',
+        "'" => 'ь',  # ASCII alternative for soft sign
         
         # Simple letters
         'a' => 'а',
